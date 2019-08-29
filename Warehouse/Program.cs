@@ -14,10 +14,13 @@ namespace Warehouse
 
 		static void Main(string[] args)
 		{
-
 			while(runProcess)
 			{
+				ITillDrawer tillDrawer = new TillDrawer(DefaultCashSet());
 
+				IConsole console = new IO.ManagementScreen(tillDrawer);
+
+				console.PerformTransaction();
 			}
 		}
 

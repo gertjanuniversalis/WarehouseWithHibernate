@@ -102,9 +102,9 @@
     <Compile Include="IO\ManagementScreen.cs" />
     <Compile Include="Models\CashItem.cs" />
     <Compile Include="Models\CashSet.cs" />
-    <Compile Include="Models\OrderedProductModel.cs" />
-    <Compile Include="Models\OrderModel.cs" />
-    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\OrderedProduct.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\Success.cs" />
     <Compile Include="Models\TillDrawer.cs" />

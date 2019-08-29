@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Warehouse.Interfaces
+using NUnit.Framework;
+
+using Warehouse.Models;
+
+namespace Warehouse.ModelTests
 {
-	public interface IConsole
+	[TestFixture]
+	class TillDrawerTests
 	{
-		void PerformTransaction();
-		void Print(string info);
 	}
 }

@@ -48,11 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControllerTests\CashControllerTests.cs" />
     <Compile Include="Mocks\MockCashSet.cs" />
+    <Compile Include="Mocks\MockProducts.cs" />
     <Compile Include="ModelTests\CashItemTests.cs" />
     <Compile Include="ModelTests\CashSetTests.cs" />
+    <Compile Include="ModelTests\ProductTests.cs" />
     <Compile Include="ModelTests\ShoppingCartTests.cs" />
     <Compile Include="ModelTests\SuccessTests.cs" />
+    <Compile Include="ModelTests\TillDrawerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +69,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ControllerTests\" />
     <Folder Include="SessionTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

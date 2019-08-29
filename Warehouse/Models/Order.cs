@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Warehouse.Interfaces;
+
 namespace Warehouse.Models
 {
-	class OrderedProductModel
+	class Order : IOrder
 	{
 		public virtual int Id { get; set; }
-		public virtual int ProductID { get; set; }
-		public virtual int OrderID { get; set; }
-		public virtual int Quantity { get; set; }
+		public virtual int CustomerID { get; set; }
+		public virtual DateTime OrderDate { get; set; }
 	}
 }

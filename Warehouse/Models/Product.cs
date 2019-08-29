@@ -8,7 +8,7 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
-	class ProductModel : IProduct
+	public class Product : IProduct
 	{
 		public virtual int Id { get; set; }
 
