@@ -8,7 +8,7 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
-	class CashItem : ICash
+	public class CashItem : ICash
 	{
 		public string ValueName { get; }
 		public decimal UnitValue { get; }

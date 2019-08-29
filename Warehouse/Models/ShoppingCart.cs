@@ -8,7 +8,7 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
-	class ShoppingCart : IShoppingCart
+	public class ShoppingCart : IShoppingCart
 	{
 		public Dictionary<IProduct, int> CartItems { get; private set; }
 
