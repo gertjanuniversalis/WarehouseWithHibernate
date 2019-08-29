@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Controllers
 {
-	class OrderController
+	/// <summary>
+	/// Provides methods to manipulate orders and the Orders/OrderedProducts Database tables
+	/// </summary>
+	public static class OrderController
 	{
 	}
 }

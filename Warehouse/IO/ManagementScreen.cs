@@ -24,6 +24,9 @@ namespace Warehouse.IO
 			this.tillDrawer = tillDrawer;
 		}
 
+		/// <summary>
+		/// Runs a single purchase transaction
+		/// </summary>
 		public void PerformTransaction()
 		{
 			transactionRuns = true;
@@ -98,16 +101,26 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Prints all items that are available for purchase
+		/// </summary>
 		private void PrintCatalogue()
 		{
 			Print(ProductController.GetCatalogue());
 		}
 
+		/// <summary>
+		/// Prints the current contents of the shoppingcart
+		/// </summary>
 		private void PrintCurrentCart()
 		{
 			Print(cart.ToString());
 		}
 
+		/// <summary>
+		/// Adds an item to the shoppingcart, based on the barcode
+		/// </summary>
+		/// <param name="barcodeString">The identification code for the item to add</param>
 		private void AddToCart(string barcodeString)
 		{
 			if(int.TryParse(barcodeString, out int barCode))
@@ -125,6 +138,10 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Removes an item from the shoppingcart, based on the barcode
+		/// </summary>
+		/// <param name="barcodeString">The identification code for the item to remove</param>
 		private void RemoveFromCart(string barcodeString)
 		{
 			if(int.TryParse(barcodeString, out int barCode))
@@ -142,11 +159,19 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Prints the cash present and total value in the tilldrawer
+		/// </summary>
 		private void ShowDrawerContent()
 		{
 			Print(tillDrawer.ToString());
 		}
 
+		/// <summary>
+		/// Stores the order in the ordersDB andprints the change to hand to the customer
+		/// </summary>
+		/// <param name="moneyGivenStr">A string representation of the cash given by the customer</param>
+		/// <returns><see langword="true"/> if the transaction was completed successfully, <see langword="false"/>if not</returns>
 		private bool FinalisePurchase(string moneyGivenStr)
 		{
 			if (decimal.TryParse(moneyGivenStr, out decimal moneyGiven))
@@ -178,6 +203,11 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Handles the payment
+		/// </summary>
+		/// <param name="moneyGiven"></param>
+		/// <returns></returns>
 		private Success HandlePayment(decimal moneyGiven)
 		{
 			decimal valueToReturn = moneyGiven - cart.GetTransactionValue();
@@ -210,6 +240,10 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Saves the current cart to the orders DB
+		/// </summary>
+		/// <returns>A 'Success' object containing the result</returns>
 		private Success SaveOrderToDB()
 		{
 			try
@@ -225,6 +259,9 @@ namespace Warehouse.IO
 			}
 		}
 
+		/// <summary>
+		/// Prints the instructions for using the till
+		/// </summary>
 		private void ShowInstructions()
 		{
 			string instructions =
@@ -241,6 +278,10 @@ namespace Warehouse.IO
 			Print(instructions);
 		}
 
+		/// <summary>
+		/// Prints the parameter to the console
+		/// </summary>
+		/// <param name="info">The text to print</param>
 		public void Print(string info)
 		{
 			Console.WriteLine(info);

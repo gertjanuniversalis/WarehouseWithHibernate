@@ -9,14 +9,25 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Controllers
 {
+	/// <summary>
+	/// Holds static methods to manipulate and create CashSets and CashItems
+	/// </summary>
 	public static class CashController
 	{
-
+		/// <summary>
+		/// Builds an ICashSet containing the smallest amount of items totalling at the defined value
+		/// </summary>
+		/// <param name="value">The desired value of the ICashSet</param>
 		public static ICashSet SmallestSetForValue(decimal value)
 		{
 			return SmallestSetForValue(value, InfiniteSet());
 		}
 
+		/// <summary>
+		/// Builds an ICashSet containing the smallest amount of items totalling at the defined value from a resticted list
+		/// </summary>
+		/// <param name="value">The desired value of the ICashSet</param>
+		/// <param name="availableItems">The set of ICashItems that can be used to build the resurnset</param>
 		public static ICashSet SmallestSetForValue(decimal value, ICashSet availableItems)
 		{
 			if (value <= 0) { return null; }
@@ -70,7 +81,9 @@ namespace Warehouse.Controllers
 
 
 
-
+		/// <summary>
+		/// Provides a functionally infinitely large cashset to loop trough
+		/// </summary>
 		private static ICashSet InfiniteSet()
 		{
 			return new CashSet(new SortedDictionary<ICash, int>
@@ -90,6 +103,9 @@ namespace Warehouse.Controllers
 			});
 		}
 
+		/// <summary>
+		/// Provides a CashSet with all available entries, and a sum total of 0
+		/// </summary>
 		private static ICashSet EmptySet()
 		{
 			return new CashSet(new SortedDictionary<ICash, int>

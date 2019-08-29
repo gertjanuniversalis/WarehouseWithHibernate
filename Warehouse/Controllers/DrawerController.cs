@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Controllers
 {
-	class DrawerController
+	/// <summary>
+	/// Holds static methods to manipulate TillDrawers
+	/// </summary>
+	public static class DrawerController
 	{
+
 	}
 }
