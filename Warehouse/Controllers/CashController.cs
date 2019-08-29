@@ -14,23 +14,64 @@ namespace Warehouse.Controllers
 
 		public static ICashSet SmallestSetForValue(decimal value)
 		{
-			//TODO
-			//make a cashset from infinite resouce, to add to the drawer
-			throw new NotImplementedException();
+			return SmallestSetForValue(value, InfiniteSet());
 		}
 
 		public static ICashSet SmallestSetForValue(decimal value, ICashSet availableItems)
 		{
-			//TODO
-			//make a cashset out of the drawer
-			throw new NotImplementedException();
+			if (value <= 0) { return null; }
+
+			ICashSet returnSet = new CashSet();
+			decimal valueToAllocate = value;
+			decimal setValue = availableItems.GetSum();
+
+			if (setValue == value)
+			{
+				return availableItems;
+			}
+			else if (setValue > value)
+			{
+				foreach (KeyValuePair<ICash, int> denomination in availableItems.CashStack)
+				{
+					int amountNeeded = (int)(valueToAllocate / denomination.Key.UnitValue);
+
+					if (amountNeeded == 0 || denomination.Value == 0)
+					{
+						//we either don't need this denomination, or we don't have any to use => skip adding it to the set
+						continue;
+					}
+					else if (denomination.Value >= amountNeeded)
+					{
+						//There are sufficient units of this value available => add the desired amount to the set
+						returnSet.Add(denomination.Key, amountNeeded);
+						valueToAllocate -= denomination.Key.UnitValue * amountNeeded;
+					}
+					else
+					{
+						//There are insufficient units available (but more than none) => use them all
+						returnSet.Add(denomination.Key, denomination.Value);
+						valueToAllocate -= denomination.Key.UnitValue * denomination.Value;
+					}
+
+					if (valueToAllocate == 0)
+					{
+						//All value has been accounted for: return the set
+						return returnSet;
+					}
+				}
+				return null;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
 
 
 
-		private static ICashSet GetInfiniteSet()
+		private static ICashSet InfiniteSet()
 		{
 			return new CashSet(new SortedDictionary<ICash, int>
 			{
@@ -49,7 +90,7 @@ namespace Warehouse.Controllers
 			});
 		}
 
-		private static ICashSet GetEmprySet()
+		private static ICashSet EmptySet()
 		{
 			return new CashSet(new SortedDictionary<ICash, int>
 			{
