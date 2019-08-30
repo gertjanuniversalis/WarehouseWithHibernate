@@ -18,7 +18,7 @@ namespace Warehouse.Interfaces
 
 
 		/// <returns>All products in the catalogue</returns>
-		IList<IProduct> GetAllProducts();
+		IList<IProduct> RefleshProductList();
 
 		/// <summary>
 		/// Prints all items in the catalogue

@@ -91,6 +91,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Exceptions\CartModifyException.cs" />
     <Compile Include="Exceptions\InvalidCashStructureException.cs" />
+    <Compile Include="Exceptions\NHibernateSessionException.cs" />
     <Compile Include="Interfaces\ICash.cs" />
     <Compile Include="Interfaces\ICashSet.cs" />
     <Compile Include="Interfaces\ICatalogue.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="IO\ManagementScreen.cs" />
     <Compile Include="Models\CashItem.cs" />
     <Compile Include="Models\CashSet.cs" />
+    <Compile Include="Models\Catalogue.cs" />
     <Compile Include="Models\OrderedProduct.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
@@ -110,15 +112,13 @@
     <Compile Include="Models\TillDrawer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sessions\NHibernateSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-    <Folder Include="Sessions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Database\WarehouseDB.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -127,6 +127,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>WarehouseDB.mdf</DependentUpon>
     </Content>
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Mapping\OrderedProductMapper.hbm.xml" />
+    <EmbeddedResource Include="Mapping\OrderMapper.hbm.xml" />
+    <EmbeddedResource Include="Mapping\ProductMapper.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory>
+    <property name="connection.provider">
+      NHibernate.Connection.DriverConnectionProvider
+    </property>
+    <property name="dialect">
+      NHibernate.Dialect.MsSql2012Dialect
+    </property>
+    <property name="connection.driver_class">
+      NHibernate.Driver.SqlClientDriver
+    </property>
+    <property name="connection.connection_string">
+      Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\gertj\source\repos\Warehouse\Warehouse\Database\WarehouseDB.mdf;Integrated Security=True
+    </property>
+    <property name="show_sql">
+      false
+    </property>
+    <!--<mapping assembly="Warehouse"/>-->
+
+    <mapping resource="Warehouse.Mapping.ProductMapper.hbm.xml" assembly="Warehouse"/>
+    <mapping resource="Warehouse.Mapping.OrderedProductMapper.hbm.xml" assembly="Warehouse"/>
+    <mapping resource="Warehouse.Mapping.OrderMapper.hbm.xml" assembly="Warehouse"/>
+    
+  </session-factory>
+</hibernate-configuration>

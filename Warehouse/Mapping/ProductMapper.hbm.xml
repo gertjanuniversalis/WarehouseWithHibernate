@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true"
+                   assembly="Warehouse" namespace="Warehouse">
+  <class name="Warehouse.Models.Product,Warehouse" table="Products">
+    <id name="Id" column="Id" type="Int32">
+      <generator class="native" />
+    </id>
+    <property name="BarCode" column="BarCode" />
+    <property name="UnitPrice" column="Price" />
+    <property name="Description" column="Description" />
+  </class>
+</hibernate-mapping>
