@@ -131,6 +131,10 @@ namespace Warehouse.IO
 				{
 					Print(success.ResultComment);
 				}
+				else
+				{
+					Print(string.Format("\n{0}\n{1}", cart.GetTransactionValue().ToString(), success.ResultComment));
+				}
 			}
 			else
 			{
@@ -215,14 +219,14 @@ namespace Warehouse.IO
 			{
 				ICashSet givenSet = CashController.SmallestSetForValue(moneyGiven);
 
-				ICashSet availableCash = tillDrawer.DrawerContent;
+				ICashSet availableCash = new CashSet(tillDrawer.DrawerContent);
 				availableCash.Add(givenSet);
 
 				ICashSet returnSet = PaymentController.Payout(valueToReturn, availableCash);
 
 				if (returnSet != null)
 				{
-					Print(string.Format("\nReturn {0}, distributed as {1}", valueToReturn.ToString(), returnSet.ToString()));
+					Print(string.Format("\nReturn {0}, distributed as: {1}", valueToReturn.ToString(), returnSet.ToString()));
 
 					tillDrawer.Add(givenSet);
 					tillDrawer.Remove(returnSet);

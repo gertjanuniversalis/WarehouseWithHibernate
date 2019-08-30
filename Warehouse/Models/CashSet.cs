@@ -30,6 +30,14 @@ namespace Warehouse.Models
 		}
 
 		/// <summary>
+		/// Creates a copy of an existing ICashSet
+		/// </summary>
+		/// <param name="initialSet">The ICashSet to copy</param>
+		public CashSet(ICashSet initialSet)
+		{
+			this.CashStack = initialSet.CashStack;
+		}
+		/// <summary>
 		/// Adds a new denomination of money to this drawer
 		/// </summary>
 		/// <param name="denomination">The type of cash to add</param>
@@ -88,7 +96,7 @@ namespace Warehouse.Models
 
 			foreach (KeyValuePair<ICash, int> pair in CashStack)
 			{
-				content.Append(String.Format("{0} times {1}\n", pair.Value.ToString(), pair.Key.ValueName));
+				content.Append(String.Format("\n{0} times {1}", pair.Value.ToString(), pair.Key.ValueName));
 			}
 
 			return content.ToString();

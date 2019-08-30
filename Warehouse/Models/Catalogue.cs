@@ -8,6 +8,7 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
+	//TODO: Determine usefulness of this class
 	class Catalogue : ICatalogue
 	{
 		public IProduct[] ProductsOnOffer { get; private set; }
@@ -19,8 +20,6 @@ namespace Warehouse.Models
 		public IList<IProduct> RefleshProductList()
 		{
 			throw new NotImplementedException();
-			ProductsOnOffer = null;
-			ProductsOnOffer = Controllers.ProductController.GetAll();
 		}
 
 		public IProduct GetProductByCode(string code)

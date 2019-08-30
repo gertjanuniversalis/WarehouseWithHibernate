@@ -23,16 +23,19 @@ namespace Warehouse.Models
 
 			if(product != null)
 			{
-				if(CartItems.ContainsKey(product))
+				foreach(KeyValuePair<IProduct, int> cartProd in CartItems)
 				{
-					CartItems[product] += amount;
-				}
-				else
-				{
-					CartItems.Add(product, amount);
+					if (cartProd.Key.BarCode == barCode)
+					{
+						CartItems[cartProd.Key] += amount;
+
+						return new Success(true, product.Description);
+					}
 				}
 
-				return new Success(true);
+				CartItems.Add(product, amount);
+
+				return new Success(true, product.Description);
 			}
 			else
 			{
