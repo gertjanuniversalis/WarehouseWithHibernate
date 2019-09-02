@@ -8,10 +8,14 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
-	class Order : IOrder
+	public class Order : IOrder
 	{
-		public virtual int Id { get; set; }
+		public virtual int OrderID { get; set; }
+
 		public virtual int CustomerID { get; set; }
+
 		public virtual DateTime OrderDate { get; set; }
+
+		public virtual ISet<OrderedProduct> OrderedProducts { get; set; } = new HashSet<OrderedProduct>();
 	}
 }

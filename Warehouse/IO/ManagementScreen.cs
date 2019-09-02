@@ -19,6 +19,8 @@ namespace Warehouse.IO
 
 		private bool transactionRuns;
 
+		private int userID;
+
 		public ManagementScreen(ITillDrawer tillDrawer)
 		{
 			this.tillDrawer = tillDrawer;
@@ -32,6 +34,8 @@ namespace Warehouse.IO
 			transactionRuns = true;
 
 			cart = new ShoppingCart();
+
+			SetUserID();
 
 			ShowInstructions();
 
@@ -78,6 +82,9 @@ namespace Warehouse.IO
 						case "C":
 							ShowDrawerContent();
 							break;
+						case "I":
+							ShowInstructions();
+							break;
 						default:
 							AddToCart(userInput);
 							break;
@@ -100,6 +107,16 @@ namespace Warehouse.IO
 					continue;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Sets the userID for database entry
+		/// </summary>
+		private void SetUserID()
+		{
+			//TODO: determing userID at runtime
+
+			userID = 0;
 		}
 
 		/// <summary>
@@ -134,7 +151,7 @@ namespace Warehouse.IO
 				}
 				else
 				{
-					Print(string.Format("\n{0}\n{1}", cart.GetTransactionValue().ToString(), success.ResultComment));
+					Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", cart.GetTransactionValue().ToString(), success.ResultComment, "========="));
 				}
 			}
 			else
@@ -253,8 +270,7 @@ namespace Warehouse.IO
 		{
 			try
 			{
-
-
+				OrderController.SaveOrder(userID, cart);
 
 				return new Success(true);
 			}
@@ -278,6 +294,7 @@ namespace Warehouse.IO
 				"RXXX\t -> Remove 1 item with code XXX from the transaction\n" +
 				"C\t -> Show the current contents of the cash drawer\n" +
 				"Q\t -> Close the register\n" +
+				"I\t -> Shows the instructions\n" +
 				"\n";
 
 			Print(instructions);

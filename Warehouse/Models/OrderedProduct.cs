@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Models
 {
-	class OrderedProduct
+	public class OrderedProduct
 	{
 		public virtual int Id { get; set; }
-		public virtual int ProductID { get; set; }
-		public virtual int OrderID { get; set; }
+		public virtual Product Product { get; set; }
+		public virtual Order Order { get; set; }
 		public virtual int Quantity { get; set; }
 	}
 }

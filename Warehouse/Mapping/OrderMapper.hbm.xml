@@ -1,10 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Warehouse" namespace="Warehouse">
   <class name="Warehouse.Models.Order,Warehouse" table="Orders">
-    <id name="Id" type="Int32" unsaved-value="0">
+    <id name="OrderID" column="Id" type="Int32" unsaved-value="0">
       <generator class="native" />
     </id>
     <property name="CustomerID" column="CustomerID" type="Int32" not-null="true" />
     <property name="OrderDate" column="OrderDate" type="DateTime" not-null="true" />
+    
+    <set name="OrderedProducts">
+      <key column="OrderID" />
+      <one-to-many class="Warehouse.Models.OrderedProduct" />
+    </set>
   </class>
 </hibernate-mapping>

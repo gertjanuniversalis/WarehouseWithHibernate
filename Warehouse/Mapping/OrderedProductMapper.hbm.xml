@@ -4,8 +4,14 @@
     <id name="Id" type="Int32" unsaved-value="0">
       <generator class="native" />
     </id>
-    <property name="ProductID" column="ProductID" type="Int32" not-null="true" />
-    <property name="OrderID" column="OrderID" type="Int32" not-null="true" />
     <property name="Quantity" column="Quantity" type="Int32" not-null="true" />
+
+    <many-to-one name="Order"
+                 class="Warehouse.Models.Order"
+                 column="OrderID" />
+    
+    <many-to-one name="Product"
+                 class="Warehouse.Models.Product"
+                 column="ProductID"/>
   </class>
 </hibernate-mapping>

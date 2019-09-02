@@ -96,6 +96,8 @@ namespace Warehouse.Models
 					contents.Append(string.Format("\n{0} times {1}", itemCount.Value.ToString(), itemCount.Key.Description));
 				}
 
+				contents.Append(string.Format("\n\nFor a total value of: {0}\n\n", GetTransactionValue().ToString()));
+			
 				return contents.ToString();
 			}
 			else

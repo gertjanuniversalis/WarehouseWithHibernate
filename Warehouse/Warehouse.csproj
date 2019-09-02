@@ -96,14 +96,16 @@
     <Compile Include="Interfaces\ICashSet.cs" />
     <Compile Include="Interfaces\IConsole.cs" />
     <Compile Include="Interfaces\IOrder.cs" />
+    <Compile Include="Interfaces\IOrderTransaction.cs" />
     <Compile Include="Interfaces\IProduct.cs" />
     <Compile Include="Interfaces\IShoppingCart.cs" />
     <Compile Include="Interfaces\ITillDrawer.cs" />
     <Compile Include="IO\ManagementScreen.cs" />
     <Compile Include="Models\CashItem.cs" />
     <Compile Include="Models\CashSet.cs" />
-    <Compile Include="Models\OrderedProduct.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderedProduct.cs" />
+    <Compile Include="Models\OrderTransaction.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\Success.cs" />
