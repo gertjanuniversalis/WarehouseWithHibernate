@@ -64,5 +64,13 @@ namespace Warehouse.Controllers
 				return session.QueryOver<Product>().List<Product>().ToArray();
 			}
 		}
+
+		internal static List<OrderedProduct> GetProductsByOrder(IOrder order)
+		{
+			using (ISession session = Sessions.NHibernateSession.OpenSession())
+			{
+				return (List<OrderedProduct>)session.QueryOver<OrderedProduct>().Where(op => op.Order == order).List<OrderedProduct>();
+			}
+		}
 	}
 }

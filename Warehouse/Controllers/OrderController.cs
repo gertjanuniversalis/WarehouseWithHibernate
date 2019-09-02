@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NHibernate;
+using NHibernate.Linq;
+
 using Warehouse.Interfaces;
 using Warehouse.Models;
 
@@ -36,6 +39,21 @@ namespace Warehouse.Controllers
 				order.Revert();
 
 				return new Success(false, "Order failed, try again");
+			}
+		}
+
+		/// <summary>
+		/// Gets an existing order from the DB
+		/// </summary>
+		/// <param name="orderID">The order to return</param>
+		internal static IOrder GetOrder(int orderID)
+		{
+			using (ISession session = Sessions.NHibernateSession.OpenSession())
+			{
+				var order = session.Query<Order>().Where(o => o.OrderID == orderID).Fetch(o => o.OrderedProducts).ToFuture();
+				session.Query<OrderedProduct>().Where(op => op.Order.OrderID == orderID).Fetch(op => op.Product).ToFuture();
+
+				return order.FirstOrDefault();
 			}
 		}
 	}

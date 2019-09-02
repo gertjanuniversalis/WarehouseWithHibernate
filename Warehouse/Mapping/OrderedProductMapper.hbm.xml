@@ -8,7 +8,7 @@
 
     <many-to-one name="Order"
                  class="Warehouse.Models.Order"
-                 column="OrderID" />
+                 column="OrderID"/>
     
     <many-to-one name="Product"
                  class="Warehouse.Models.Product"

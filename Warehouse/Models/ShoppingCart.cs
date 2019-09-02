@@ -17,6 +17,16 @@ namespace Warehouse.Models
 			CartItems = new Dictionary<IProduct, int>();
 		}
 
+		public ShoppingCart(List<OrderedProduct> initialContent)
+		{
+			CartItems = new Dictionary<IProduct, int>();
+
+			foreach (OrderedProduct product in initialContent)
+			{
+				CartItems.Add(product.Product, product.Quantity);
+			}
+		}
+
 		public Success AddItem(int barCode, int amount = 1)
 		{
 			IProduct product = Controllers.ProductController.GetItemByCode(barCode);

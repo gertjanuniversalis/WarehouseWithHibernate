@@ -7,7 +7,7 @@
     <property name="CustomerID" column="CustomerID" type="Int32" not-null="true" />
     <property name="OrderDate" column="OrderDate" type="DateTime" not-null="true" />
     
-    <set name="OrderedProducts">
+    <set name="OrderedProducts" fetch="join">
       <key column="OrderID" />
       <one-to-many class="Warehouse.Models.OrderedProduct" />
     </set>
