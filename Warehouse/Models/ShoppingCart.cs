@@ -45,7 +45,9 @@ namespace Warehouse.Models
 
 				CartItems.Add(product, amount);
 
-				return new Success(true, product.Description);
+				return new Success(true, string.Format("{0}{1}",
+					product.Description, 
+					amount != 1 ? ", ("+amount.ToString()+")" : ""));
 			}
 			else
 			{

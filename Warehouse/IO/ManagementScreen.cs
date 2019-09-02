@@ -48,31 +48,12 @@ namespace Warehouse.IO
 
 					switch (userInput.ToUpper().Substring(0,1))
 					{
-						case "B":
-							if (FinalisePurchase(userInput.Substring(1)))
-							{
-								return;
-							}
-							else
-							{
-								break;
-							}
-						case "P":
-							PrintCatalogue();
-							break;
-						case "T":
-							PrintCurrentCart();
-							break;
-						case "R":
-							RemoveFromCart(userInput.Substring(1));
-							break;
 						case "A":
 							AddToCart(userInput.Substring(1));
 							break;
-						case "Q":
-							if (Program.QuitConfirm())
+						case "B":
+							if (FinalisePurchase(userInput.Substring(1)))
 							{
-								transactionRuns = false;
 								return;
 							}
 							else
@@ -85,10 +66,31 @@ namespace Warehouse.IO
 						case "I":
 							ShowInstructions();
 							break;
+						case "O":
+							PrintOrder(userInput.Substring(1));
+							break;
+						case "P":
+							PrintCatalogue();
+							break;
+						case "Q":
+							if (Program.QuitConfirm())
+							{
+								transactionRuns = false;
+								return;
+							}
+							else
+							{
+								break;
+							}
+						case "R":
+							RemoveFromCart(userInput.Substring(1));
+							break;
+						case "T":
+							PrintCurrentCart();
+							break;						
 						default:
 							AddToCart(userInput);
 							break;
-
 					}
 				}
 				catch (InvalidCashStructureException)
@@ -106,6 +108,32 @@ namespace Warehouse.IO
 					Print("An unexpected error occured, please retry what you were doing");
 					continue;
 				}
+			}
+		}
+
+		private void PrintOrder(string orderIdStr)
+		{
+			if (int.TryParse(orderIdStr, out int orderID))
+			{
+				IOrder requestedOrder = OrderController.GetOrder(orderID);
+
+				if(requestedOrder != null)
+				{
+					IShoppingCart orderCart = new ShoppingCart(requestedOrder.OrderedProducts.ToList());
+
+					Print(string.Format("The contents of Order {0} are \n{1}Ordered at {2}",
+						orderIdStr,
+						orderCart.ToString(),
+						requestedOrder.OrderDate.ToString()));
+				}
+				else
+				{
+					Print(string.Format("No order found for ID: {0}", orderIdStr));
+				}
+			}
+			else
+			{
+				Print("Invalid id string");
 			}
 		}
 
@@ -141,9 +169,13 @@ namespace Warehouse.IO
 		/// <param name="barcodeString">The identification code for the item to add</param>
 		private void AddToCart(string barcodeString)
 		{
-			if(int.TryParse(barcodeString, out int barCode))
+			string[] codeAmount = barcodeString.Split(' ');
+
+			if (int.TryParse(codeAmount[0], out int barCode))
 			{
-				Success success = cart.AddItem(barCode);
+				int amount = codeAmount.Length > 1 ? (int.TryParse(codeAmount?[1], out int enteredNum) ? enteredNum : 1) : 1;
+
+				Success success = cart.AddItem(barCode, amount);
 				
 				if (!success.Result)
 				{
@@ -151,7 +183,10 @@ namespace Warehouse.IO
 				}
 				else
 				{
-					Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", cart.GetTransactionValue().ToString(), success.ResultComment, "========="));
+					Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
+						cart.GetTransactionValue().ToString(), 
+						success.ResultComment, 
+						"========="));
 				}
 			}
 			else
@@ -166,9 +201,13 @@ namespace Warehouse.IO
 		/// <param name="barcodeString">The identification code for the item to remove</param>
 		private void RemoveFromCart(string barcodeString)
 		{
-			if(int.TryParse(barcodeString, out int barCode))
+			string[] codeAmount = barcodeString.Split(' ');
+
+			if(int.TryParse(codeAmount[0], out int barCode))
 			{
-				Success success = cart.RemoveItem(barCode);
+				int amount = codeAmount.Length > 1 ? (int.TryParse(codeAmount?[1], out int enteredNum) ? enteredNum : 1) : 1;
+
+				Success success = cart.RemoveItem(barCode, amount);
 
 				if(!success.Result)
 				{
@@ -244,7 +283,9 @@ namespace Warehouse.IO
 
 				if (returnSet != null)
 				{
-					Print(string.Format("\nReturn {0}, distributed as: {1}", valueToReturn.ToString(), returnSet.ToString()));
+					Print(string.Format("\nReturn {0}, distributed as: {1}", 
+						valueToReturn.ToString(), 
+						returnSet.ToString()));
 
 					tillDrawer.Add(givenSet);
 					tillDrawer.Remove(returnSet);
@@ -286,15 +327,20 @@ namespace Warehouse.IO
 		private void ShowInstructions()
 		{
 			string instructions =
-				"XXX \t-> Add 1 item with code XXX to the transaction\n" +
+				"XXX\t -> Add 1 item with code XXX to the transaction\n" +
+				"XXX Y\t -> Adds Y of item with code XXX to the transaction" +
 				"AXXX\t -> Add 1 item with code XXX to the transaction\n" +
+				"AXXX Y\t -> Adds Y of item with code XXX to the transaction" +
+				"RXXX\t -> Remove 1 item with code XXX from the transaction\n" +
+				"RXXX Y\t -> Remove Y items with code XXX from the transaction\n" +
+				"-----------------" +
 				"T\t -> Print the current transaction\n" +
 				"BYYY\t -> process payment of YYY\n" +
 				"P\t -> Print all available items\n" +
-				"RXXX\t -> Remove 1 item with code XXX from the transaction\n" +
 				"C\t -> Show the current contents of the cash drawer\n" +
 				"Q\t -> Close the register\n" +
 				"I\t -> Shows the instructions\n" +
+				"OXXX\t -> Displays the contents of Order XXX\n" +
 				"\n";
 
 			Print(instructions);
