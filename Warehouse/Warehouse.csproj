@@ -94,7 +94,6 @@
     <Compile Include="Exceptions\NHibernateSessionException.cs" />
     <Compile Include="Interfaces\ICash.cs" />
     <Compile Include="Interfaces\ICashSet.cs" />
-    <Compile Include="Interfaces\ICatalogue.cs" />
     <Compile Include="Interfaces\IConsole.cs" />
     <Compile Include="Interfaces\IOrder.cs" />
     <Compile Include="Interfaces\IProduct.cs" />
@@ -103,7 +102,6 @@
     <Compile Include="IO\ManagementScreen.cs" />
     <Compile Include="Models\CashItem.cs" />
     <Compile Include="Models\CashSet.cs" />
-    <Compile Include="Models\Catalogue.cs" />
     <Compile Include="Models\OrderedProduct.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />

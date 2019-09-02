@@ -86,16 +86,17 @@ namespace Warehouse.IO
 				}
 				catch (InvalidCashStructureException)
 				{
-					//TODO: handle exception
+					Print("This form of cashitem/cashstack is not valid; please reenter");
 					continue;
 				}
 				catch (CartModifyException)
 				{
-					//TODO: Handle Exception
+					Print("Unable to add this product to the cart: please try again");
 					continue;
 				}
 				catch (Exception)
 				{
+					Print("An unexpected error occured, please retry what you were doing");
 					continue;
 				}
 			}

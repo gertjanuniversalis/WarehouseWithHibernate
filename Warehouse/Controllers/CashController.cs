@@ -78,9 +78,6 @@ namespace Warehouse.Controllers
 			}
 		}
 
-
-
-
 		/// <summary>
 		/// Provides a functionally infinitely large cashset to loop trough
 		/// </summary>
