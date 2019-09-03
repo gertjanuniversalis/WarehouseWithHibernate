@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CashController.cs" />
+    <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DrawerController.cs" />
     <Compile Include="Controllers\NHibernateController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Exceptions\NHibernateSessionException.cs" />
     <Compile Include="Interfaces\ICash.cs" />
     <Compile Include="Interfaces\ICashSet.cs" />
-    <Compile Include="Interfaces\IConsole.cs" />
     <Compile Include="Interfaces\IOrder.cs" />
     <Compile Include="Interfaces\IOrderTransaction.cs" />
     <Compile Include="Interfaces\IProduct.cs" />
@@ -118,7 +118,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EventArgs\" />
+    <Folder Include="EventHandlers\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Database\WarehouseDB.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

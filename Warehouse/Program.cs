@@ -21,19 +21,17 @@ namespace Warehouse
 			{
 				ITillDrawer tillDrawer = new TillDrawer(DefaultCashSet());
 
-				IConsole console = new IO.ManagementScreen(tillDrawer);
+				var employeeTill = new IO.ManagementScreen(tillDrawer);
 
-				console.PerformTransaction();
+				employeeTill.PerformTransaction();
 			}
 		}
 
 		internal static bool QuitConfirm()
 		{
-			Console.WriteLine("Really Quit? (Y/N)");
+			var resultKey = Controllers.ConsoleController.GetSingleKey("Really Quit? (Y/N)");
 
-			var answer = Console.ReadKey(false);
-
-			if (answer.Key == ConsoleKey.Y)
+			if (resultKey == ConsoleKey.Y)
 			{
 				runProcess = false;
 				return true;

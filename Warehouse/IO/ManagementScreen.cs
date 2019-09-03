@@ -11,7 +11,7 @@ using Warehouse.Controllers;
 
 namespace Warehouse.IO
 {
-	class ManagementScreen : IConsole
+	class ManagementScreen
 	{
 		private readonly ITillDrawer tillDrawer;
 
@@ -43,8 +43,8 @@ namespace Warehouse.IO
 			{
 				try
 				{
-					Print("Input code");
-					string userInput = Console.ReadLine();
+					string userInput = ConsoleController.GetStringInput("Input code");
+
 
 					switch (userInput.ToUpper().Substring(0,1))
 					{
@@ -95,17 +95,17 @@ namespace Warehouse.IO
 				}
 				catch (InvalidCashStructureException)
 				{
-					Print("This form of cashitem/cashstack is not valid; please reenter");
+					ConsoleController.Print("This form of cashitem/cashstack is not valid; please reenter");
 					continue;
 				}
 				catch (CartModifyException)
 				{
-					Print("Unable to add this product to the cart: please try again");
+					ConsoleController.Print("Unable to add this product to the cart: please try again");
 					continue;
 				}
 				catch (Exception)
 				{
-					Print("An unexpected error occured, please retry what you were doing");
+					ConsoleController.Print("An unexpected error occured, please retry what you were doing");
 					continue;
 				}
 			}
@@ -121,19 +121,19 @@ namespace Warehouse.IO
 				{
 					IShoppingCart orderCart = new ShoppingCart(requestedOrder.OrderedProducts.ToList());
 
-					Print(string.Format("The contents of Order {0} are \n{1}Ordered at {2}",
+					ConsoleController.Print(string.Format("The contents of Order {0} are \n{1}Ordered at {2}",
 						orderIdStr,
 						orderCart.ToString(),
 						requestedOrder.OrderDate.ToString()));
 				}
 				else
 				{
-					Print(string.Format("No order found for ID: {0}", orderIdStr));
+					ConsoleController.Print(string.Format("No order found for ID: {0}", orderIdStr));
 				}
 			}
 			else
 			{
-				Print("Invalid id string");
+				ConsoleController.Print("Invalid id string");
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void PrintCatalogue()
 		{
-			Print(ProductController.GetCatalogue());
+			ConsoleController.Print(ProductController.GetCatalogue());
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void PrintCurrentCart()
 		{
-			Print(cart.ToString());
+			ConsoleController.Print(cart.ToString());
 		}
 
 		/// <summary>
@@ -179,11 +179,11 @@ namespace Warehouse.IO
 				
 				if (!success.Result)
 				{
-					Print(success.ResultComment);
+					ConsoleController.Print(success.ResultComment);
 				}
 				else
 				{
-					Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
+					ConsoleController.Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
 						cart.GetTransactionValue().ToString(), 
 						success.ResultComment, 
 						"========="));
@@ -191,7 +191,7 @@ namespace Warehouse.IO
 			}
 			else
 			{
-				Print("\nInvalid Barcode");
+				ConsoleController.Print("\nInvalid Barcode");
 			}
 		}
 
@@ -211,12 +211,12 @@ namespace Warehouse.IO
 
 				if(!success.Result)
 				{
-					Print(success.ResultComment);
+					ConsoleController.Print(success.ResultComment);
 				}
 			}
 			else
 			{
-				Print("\nInvalid Barcode");
+				ConsoleController.Print("\nInvalid Barcode");
 			}
 		}
 
@@ -225,7 +225,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void ShowDrawerContent()
 		{
-			Print(tillDrawer.ToString());
+			ConsoleController.Print(tillDrawer.ToString());
 		}
 
 		/// <summary>
@@ -247,19 +247,19 @@ namespace Warehouse.IO
 					}
 					else
 					{
-						Print(orderSaved.ResultComment);
+						ConsoleController.Print(orderSaved.ResultComment);
 						return false;
 					}
 				}
 				else
 				{
-					Print(paymentSuccess.ResultComment);
+					ConsoleController.Print(paymentSuccess.ResultComment);
 					return false;
 				}
 			}
 			else
 			{
-				Print("\nIncorrect payment format");
+				ConsoleController.Print("\nIncorrect payment format");
 				return false;
 			}
 		}
@@ -283,7 +283,7 @@ namespace Warehouse.IO
 
 				if (returnSet != null)
 				{
-					Print(string.Format("\nReturn {0}, distributed as: {1}", 
+					ConsoleController.Print(string.Format("\nReturn {0}, distributed as: {1}", 
 						valueToReturn.ToString(), 
 						returnSet.ToString()));
 
@@ -343,16 +343,7 @@ namespace Warehouse.IO
 				"OXXX\t -> Displays the contents of Order XXX\n" +
 				"\n";
 
-			Print(instructions);
-		}
-
-		/// <summary>
-		/// Prints the parameter to the console
-		/// </summary>
-		/// <param name="info">The text to print</param>
-		public void Print(string info)
-		{
-			Console.WriteLine(info);
+			ConsoleController.Print(instructions);
 		}
 	}
 }
