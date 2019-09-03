@@ -95,8 +95,10 @@
     <Compile Include="Exceptions\NHibernateSessionException.cs" />
     <Compile Include="Interfaces\ICash.cs" />
     <Compile Include="Interfaces\ICashSet.cs" />
+    <Compile Include="Interfaces\IConsole.cs" />
     <Compile Include="Interfaces\IOrder.cs" />
     <Compile Include="Interfaces\IOrderTransaction.cs" />
+    <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="Interfaces\IProduct.cs" />
     <Compile Include="Interfaces\IShoppingCart.cs" />
     <Compile Include="Interfaces\ITillDrawer.cs" />

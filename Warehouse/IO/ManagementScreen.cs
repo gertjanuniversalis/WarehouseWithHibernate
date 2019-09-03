@@ -14,16 +14,17 @@ namespace Warehouse.IO
 	class ManagementScreen
 	{
 		private readonly ITillDrawer tillDrawer;
+		private readonly IConsole consoleDisplay;
 
 		private IShoppingCart cart;
 
 		private bool transactionRuns;
-
 		private int userID;
 
 		public ManagementScreen(ITillDrawer tillDrawer)
 		{
 			this.tillDrawer = tillDrawer;
+			this.consoleDisplay = new ConsoleController();
 		}
 
 		/// <summary>
@@ -43,8 +44,7 @@ namespace Warehouse.IO
 			{
 				try
 				{
-					string userInput = ConsoleController.GetStringInput("Input code");
-
+					string userInput = consoleDisplay.GetStringInput("Input code");
 
 					switch (userInput.ToUpper().Substring(0,1))
 					{
@@ -95,17 +95,17 @@ namespace Warehouse.IO
 				}
 				catch (InvalidCashStructureException)
 				{
-					ConsoleController.Print("This form of cashitem/cashstack is not valid; please reenter");
+					consoleDisplay.Print("This form of cashitem/cashstack is not valid; please reenter");
 					continue;
 				}
 				catch (CartModifyException)
 				{
-					ConsoleController.Print("Unable to add this product to the cart: please try again");
+					consoleDisplay.Print("Unable to add this product to the cart: please try again");
 					continue;
 				}
 				catch (Exception)
 				{
-					ConsoleController.Print("An unexpected error occured, please retry what you were doing");
+					consoleDisplay.Print("An unexpected error occured, please retry what you were doing");
 					continue;
 				}
 			}
@@ -121,19 +121,19 @@ namespace Warehouse.IO
 				{
 					IShoppingCart orderCart = new ShoppingCart(requestedOrder.OrderedProducts.ToList());
 
-					ConsoleController.Print(string.Format("The contents of Order {0} are \n{1}Ordered at {2}",
+					consoleDisplay.Print(string.Format("The contents of Order {0} are \n{1}Ordered at {2}",
 						orderIdStr,
 						orderCart.ToString(),
 						requestedOrder.OrderDate.ToString()));
 				}
 				else
 				{
-					ConsoleController.Print(string.Format("No order found for ID: {0}", orderIdStr));
+					consoleDisplay.Print(string.Format("No order found for ID: {0}", orderIdStr));
 				}
 			}
 			else
 			{
-				ConsoleController.Print("Invalid id string");
+				consoleDisplay.Print("Invalid id string");
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void PrintCatalogue()
 		{
-			ConsoleController.Print(ProductController.GetCatalogue());
+			consoleDisplay.Print(ProductController.GetCatalogue());
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void PrintCurrentCart()
 		{
-			ConsoleController.Print(cart.ToString());
+			consoleDisplay.Print(cart.ToString());
 		}
 
 		/// <summary>
@@ -179,11 +179,11 @@ namespace Warehouse.IO
 				
 				if (!success.Result)
 				{
-					ConsoleController.Print(success.ResultComment);
+					consoleDisplay.Print(success.ResultComment);
 				}
 				else
 				{
-					ConsoleController.Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
+					consoleDisplay.Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
 						cart.GetTransactionValue().ToString(), 
 						success.ResultComment, 
 						"========="));
@@ -191,7 +191,7 @@ namespace Warehouse.IO
 			}
 			else
 			{
-				ConsoleController.Print("\nInvalid Barcode");
+				consoleDisplay.Print("\nInvalid Barcode");
 			}
 		}
 
@@ -211,12 +211,12 @@ namespace Warehouse.IO
 
 				if(!success.Result)
 				{
-					ConsoleController.Print(success.ResultComment);
+					consoleDisplay.Print(success.ResultComment);
 				}
 			}
 			else
 			{
-				ConsoleController.Print("\nInvalid Barcode");
+				consoleDisplay.Print("\nInvalid Barcode");
 			}
 		}
 
@@ -225,7 +225,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void ShowDrawerContent()
 		{
-			ConsoleController.Print(tillDrawer.ToString());
+			consoleDisplay.Print(tillDrawer.ToString());
 		}
 
 		/// <summary>
@@ -247,19 +247,19 @@ namespace Warehouse.IO
 					}
 					else
 					{
-						ConsoleController.Print(orderSaved.ResultComment);
+						consoleDisplay.Print(orderSaved.ResultComment);
 						return false;
 					}
 				}
 				else
 				{
-					ConsoleController.Print(paymentSuccess.ResultComment);
+					consoleDisplay.Print(paymentSuccess.ResultComment);
 					return false;
 				}
 			}
 			else
 			{
-				ConsoleController.Print("\nIncorrect payment format");
+				consoleDisplay.Print("\nIncorrect payment format");
 				return false;
 			}
 		}
@@ -283,7 +283,7 @@ namespace Warehouse.IO
 
 				if (returnSet != null)
 				{
-					ConsoleController.Print(string.Format("\nReturn {0}, distributed as: {1}", 
+					consoleDisplay.Print(string.Format("\nReturn {0}, distributed as: {1}", 
 						valueToReturn.ToString(), 
 						returnSet.ToString()));
 
@@ -343,7 +343,7 @@ namespace Warehouse.IO
 				"OXXX\t -> Displays the contents of Order XXX\n" +
 				"\n";
 
-			ConsoleController.Print(instructions);
+			consoleDisplay.Print(instructions);
 		}
 	}
 }

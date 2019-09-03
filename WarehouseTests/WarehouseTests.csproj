@@ -50,10 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerTests\CashControllerTests.cs" />
+    <Compile Include="ControllerTests\PaymentControllerTests.cs" />
     <Compile Include="Mocks\MockCashSet.cs" />
+    <Compile Include="Mocks\MockOrders.cs" />
     <Compile Include="Mocks\MockProducts.cs" />
     <Compile Include="ModelTests\CashItemTests.cs" />
     <Compile Include="ModelTests\CashSetTests.cs" />
+    <Compile Include="ModelTests\OrderedProductTests.cs" />
+    <Compile Include="ModelTests\OrderTests.cs" />
     <Compile Include="ModelTests\ProductTests.cs" />
     <Compile Include="ModelTests\ShoppingCartTests.cs" />
     <Compile Include="ModelTests\SuccessTests.cs" />

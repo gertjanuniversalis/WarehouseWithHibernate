@@ -8,24 +8,24 @@ using Warehouse.Interfaces;
 
 namespace Warehouse.Controllers
 {
-	public static class ConsoleController
+	public class ConsoleController : IConsole
 	{
 		/// <summary>
 		/// Prints the parameter to the console
 		/// </summary>
 		/// <param name="textToPrint">The text to print</param>
-		public static void Print(string textToPrint)
+		public void Print(string textToPrint)
 		{
 			Console.WriteLine(textToPrint);
 		}
 
-		public static string GetStringInput(string textToShow)
+		public string GetStringInput(string textToShow)
 		{
 			Print(textToShow);
 			return Console.ReadLine();
 		}
 
-		public static ConsoleKey GetSingleKey(string textToShow, bool hideInput = false)
+		public ConsoleKey GetSingleKey(string textToShow, bool hideInput = false)
 		{
 			Print(textToShow);
 			return Console.ReadKey(hideInput).Key;
