@@ -7,16 +7,22 @@ using System.Threading.Tasks;
 using Warehouse.Interfaces;
 using Warehouse.Models;
 using Warehouse.Exceptions;
+#pragma warning disable CS0234 // The type or namespace name 'Controllers' does not exist in the namespace 'Warehouse' (are you missing an assembly reference?)
 using Warehouse.Controllers;
+#pragma warning restore CS0234 // The type or namespace name 'Controllers' does not exist in the namespace 'Warehouse' (are you missing an assembly reference?)
+using Warehouse.CustomArgs;
 
-namespace Warehouse.IO
+namespace Warehouse.Obsolete.IO
 {
 	class ManagementScreen
 	{
+		public delegate void ManagementScreenClosingEventHandler(object source, EventArgs e);
+		public event ManagementScreenClosingEventHandler ManagementScreenClosing;
+		
 		private readonly ITillDrawer tillDrawer;
 		private readonly IConsole consoleDisplay;
 
-		private IShoppingCart cart;
+		public IShoppingCart Cart { get; private set; }
 
 		private bool transactionRuns;
 		private int userID;
@@ -34,7 +40,7 @@ namespace Warehouse.IO
 		{
 			transactionRuns = true;
 
-			cart = new ShoppingCart();
+			Cart = new ShoppingCart();
 
 			SetUserID();
 
@@ -73,9 +79,8 @@ namespace Warehouse.IO
 							PrintCatalogue();
 							break;
 						case "Q":
-							if (Program.QuitConfirm())
+							if(QuitConfirm())
 							{
-								transactionRuns = false;
 								return;
 							}
 							else
@@ -160,7 +165,7 @@ namespace Warehouse.IO
 		/// </summary>
 		private void PrintCurrentCart()
 		{
-			consoleDisplay.Print(cart.ToString());
+			consoleDisplay.Print(Cart.ToString());
 		}
 
 		/// <summary>
@@ -175,7 +180,7 @@ namespace Warehouse.IO
 			{
 				int amount = codeAmount.Length > 1 ? (int.TryParse(codeAmount?[1], out int enteredNum) ? enteredNum : 1) : 1;
 
-				Success success = cart.AddItem(barCode, amount);
+				Success success = Cart.AddItem(barCode, amount);
 				
 				if (!success.Result)
 				{
@@ -184,7 +189,7 @@ namespace Warehouse.IO
 				else
 				{
 					consoleDisplay.Print(string.Format("\n{2}\n{0}\n{1}\n{2}\n\n", 
-						cart.GetTransactionValue().ToString(), 
+						Cart.GetTransactionValue().ToString(), 
 						success.ResultComment, 
 						"========="));
 				}
@@ -207,7 +212,7 @@ namespace Warehouse.IO
 			{
 				int amount = codeAmount.Length > 1 ? (int.TryParse(codeAmount?[1], out int enteredNum) ? enteredNum : 1) : 1;
 
-				Success success = cart.RemoveItem(barCode, amount);
+				Success success = Cart.RemoveItem(barCode, amount);
 
 				if(!success.Result)
 				{
@@ -264,14 +269,16 @@ namespace Warehouse.IO
 			}
 		}
 
+#pragma warning disable CS0246 // The type or namespace name 'Success' could not be found (are you missing a using directive or an assembly reference?)
 		/// <summary>
 		/// Handles the payment
 		/// </summary>
 		/// <param name="moneyGiven"></param>
 		/// <returns></returns>
 		private Success HandlePayment(decimal moneyGiven)
+#pragma warning restore CS0246 // The type or namespace name 'Success' could not be found (are you missing a using directive or an assembly reference?)
 		{
-			decimal valueToReturn = moneyGiven - cart.GetTransactionValue();
+			decimal valueToReturn = moneyGiven - Cart.GetTransactionValue();
 			if (tillDrawer.ContainsEnough(valueToReturn))
 			{
 				ICashSet givenSet = CashController.SmallestSetForValue(moneyGiven);
@@ -303,21 +310,38 @@ namespace Warehouse.IO
 			}
 		}
 
+#pragma warning disable CS0246 // The type or namespace name 'Success' could not be found (are you missing a using directive or an assembly reference?)
 		/// <summary>
 		/// Saves the current cart to the orders DB
 		/// </summary>
 		/// <returns>A 'Success' object containing the result</returns>
 		private Success SaveOrderToDB()
+#pragma warning restore CS0246 // The type or namespace name 'Success' could not be found (are you missing a using directive or an assembly reference?)
 		{
 			try
 			{
-				OrderController.SaveOrder(userID, cart);
+				OrderController.SaveOrder(userID, Cart);
 
 				return new Success(true);
 			}
 			catch (Exception e)
 			{
 				return new Success(false, e.Message);
+			}
+		}
+
+		private bool QuitConfirm()
+		{
+			var resultKey = consoleDisplay.GetSingleKey("Really Quit? (Y/N)");
+
+			if (resultKey == ConsoleKey.Y)
+			{
+				RaiseScreenClosing();
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -333,7 +357,7 @@ namespace Warehouse.IO
 				"AXXX Y\t -> Adds Y of item with code XXX to the transaction" +
 				"RXXX\t -> Remove 1 item with code XXX from the transaction\n" +
 				"RXXX Y\t -> Remove Y items with code XXX from the transaction\n" +
-				"-----------------" +
+				"-----------------\n" +
 				"T\t -> Print the current transaction\n" +
 				"BYYY\t -> process payment of YYY\n" +
 				"P\t -> Print all available items\n" +
@@ -345,5 +369,19 @@ namespace Warehouse.IO
 
 			consoleDisplay.Print(instructions);
 		}
+
+
+
+		protected virtual void RaiseScreenClosing()
+		{
+			ManagementScreenClosingEventHandler copy = ManagementScreenClosing;
+
+			if (copy != null)
+			{
+				copy.Invoke(this, EventArgs.Empty);
+			}
+		}
+
+		
 	}
 }

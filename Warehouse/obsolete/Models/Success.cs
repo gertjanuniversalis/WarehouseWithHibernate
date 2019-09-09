@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Warehouse.Models
+namespace Warehouse.Obsolete.Models
 {
 	public class Success
 	{

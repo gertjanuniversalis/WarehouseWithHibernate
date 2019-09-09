@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using NHibernate;
+using Warehouse.Exceptions;
 using Warehouse.Interfaces;
 
-namespace Warehouse.Models
+namespace Warehouse.Obsolete.Models
 {
-	public class OrderTransaction
+	class OrderTransaction : IOrderTransaction
 	{
 		public IOrder Order { get; set; }
 		public int CustomerID { get; set; }
@@ -20,7 +20,7 @@ namespace Warehouse.Models
 
 		public OrderTransaction()
 		{
-
+			
 		}
 
 		~OrderTransaction()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Warehouse.Interfaces;
 
-namespace Warehouse.Models
+namespace Warehouse.Obsolete.Models
 {
 	public class Product : IProduct
 	{
@@ -16,6 +16,6 @@ namespace Warehouse.Models
 
 		public virtual decimal UnitPrice { get; set; }
 
-		public virtual string Description { get; set; }
+		public virtual string Description { get; set; }		
 	}
 }

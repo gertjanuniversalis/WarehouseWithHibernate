@@ -14,7 +14,7 @@ namespace Warehouse.ModelTests
 		[Test]
 		public void CanCreateEmptyCart()
 		{
-			ShoppingCart cart = new ShoppingCart();
+			ShoppingCart cart = new ShoppingCart(new Controllers.ProductController());
 
 			Assert.IsNotNull(cart);
 			Assert.IsEmpty(cart.CartItems);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Warehouse.Interfaces;
 
-namespace Warehouse.Models
+namespace Warehouse.Obsolete.Models
 {
 	public class CashSet : ICashSet
 	{
@@ -49,7 +49,7 @@ namespace Warehouse.Models
 
 		public void Add(ICashSet cashSet)
 		{
-			foreach (KeyValuePair<ICash, int> denomination in cashSet.CashStack)
+			foreach(KeyValuePair<ICash, int> denomination in cashSet.CashStack)
 			{
 				Add(denomination.Key, denomination.Value);
 			}
@@ -96,7 +96,7 @@ namespace Warehouse.Models
 
 			foreach (KeyValuePair<ICash, int> pair in CashStack)
 			{
-				content.Append(string.Format("\n{0} times {1}", pair.Value.ToString(), pair.Key.ValueName));
+				content.Append(String.Format("\n{0} times {1}", pair.Value.ToString(), pair.Key.ValueName));
 			}
 
 			return content.ToString();

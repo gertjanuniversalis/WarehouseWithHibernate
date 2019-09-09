@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Warehouse.Interfaces;
-using Warehouse.Models;
 
-namespace Warehouse.Controllers
+using Warehouse.Models;
+using Warehouse.Interfaces;
+
+namespace Warehouse.Obsolete.Controllers
 {
+	/// <summary>
+	/// Holds static methods to manipulate and create CashSets and CashItems
+	/// </summary>
 	public static class CashController
 	{
 		/// <summary>

@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Warehouse.CustomArgs;
-using Warehouse.Interfaces;
+
 using Warehouse.Models;
+using Warehouse.Interfaces;
 
-namespace Warehouse.Controllers
+namespace Warehouse.Obsolete.Controllers
 {
-	public class PaymentController
+	/// <summary>
+	/// Provides methods to deal with payments
+	/// </summary>
+	public static class PaymentController
 	{
-		public TillDrawer TillDrawer { get; }
-
-		public PaymentController(TillDrawer tillDrawer)
-		{
-			this.TillDrawer = tillDrawer;
-		}
-
 		/// <summary>
 		/// Creates a Payout cashset from a set of cashitems
 		/// </summary>
 		/// <param name="valueToPay">The desired value of the returned cashset</param>
 		/// <param name="drawerContent">The cashset from which to return a subset for payout</param>
 		/// <returns></returns>
-		public ICashSet Payout(decimal valueToPay, ICashSet drawerContent)
+		public static ICashSet Payout(decimal valueToPay, ICashSet drawerContent)
 		{
 			ICashSet payOut = CashController.SmallestSetForValue(valueToPay, drawerContent);
 
-			if (payOut != null)
+			if(payOut != null)
 			{
 				//Return the payout set
 				return payOut;
@@ -40,11 +36,6 @@ namespace Warehouse.Controllers
 
 				return CashController.SmallestSetForValue(roundedValue, drawerContent);
 			}
-		}
-
-		public void DetermineChange(object s, PaymentEventArgs pe)
-		{
-
 		}
 	}
 }

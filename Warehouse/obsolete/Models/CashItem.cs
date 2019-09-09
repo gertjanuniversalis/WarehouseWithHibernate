@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 using Warehouse.Interfaces;
 
-namespace Warehouse.Models
+namespace Warehouse.Obsolete.Models
 {
-
 	public class CashItem : ICash
-	{ 
+	{
 		public string ValueName { get; }
-
 		public decimal UnitValue { get; }
 
 		/// <summary>

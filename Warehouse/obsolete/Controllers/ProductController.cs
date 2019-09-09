@@ -5,19 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NHibernate;
+using NHibernate.Cfg;
 
 using Warehouse.Interfaces;
 using Warehouse.Models;
 
-namespace Warehouse.Controllers
+namespace Warehouse.Obsolete.Controllers
 {
-	public class ProductController
+	/// <summary>
+	/// Provides access to the Products table in the database
+	/// </summary>
+	class ProductController
 	{
 		/// <summary>
 		/// Finds the first item with a specific barcode in the database
 		/// </summary>
 		/// <param name="barCode"></param>
-		internal IProduct GetItemByCode(int barCode)
+		internal static IProduct GetItemByCode(int barCode)
 		{
 			using (ISession session = Sessions.NHibernateSession.OpenSession())
 			{
@@ -28,7 +32,7 @@ namespace Warehouse.Controllers
 		/// <summary>
 		/// Provides a string representation of the entire catalogue
 		/// </summary>
-		internal string GetCatalogue()
+		internal static string GetCatalogue()
 		{
 			IProduct[] availableProducts = GetAll();
 
@@ -53,7 +57,7 @@ namespace Warehouse.Controllers
 		/// <summary>
 		/// Gets all entries in the 'products' table
 		/// </summary>
-		internal IProduct[] GetAll()
+		internal static IProduct[] GetAll()
 		{
 			using (ISession session = Sessions.NHibernateSession.OpenSession())
 			{
@@ -61,17 +65,14 @@ namespace Warehouse.Controllers
 			}
 		}
 
-		internal List<OrderedProduct> GetProductsByOrder(IOrder order)
+#pragma warning disable CS0246 // The type or namespace name 'OrderedProduct' could not be found (are you missing a using directive or an assembly reference?)
+		internal static List<OrderedProduct> GetProductsByOrder(IOrder order)
+#pragma warning restore CS0246 // The type or namespace name 'OrderedProduct' could not be found (are you missing a using directive or an assembly reference?)
 		{
 			using (ISession session = Sessions.NHibernateSession.OpenSession())
 			{
 				return (List<OrderedProduct>)session.QueryOver<OrderedProduct>().Where(op => op.Order == order).List<OrderedProduct>();
 			}
-		}
-
-		internal void PrintCatalogue(object sender, EventArgs e)
-		{
-			Console.WriteLine(GetCatalogue());
 		}
 	}
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Warehouse.Controllers
+namespace Warehouse.CustomArgs
 {
-	class DrawerController
+	public class ConsolePrintEventArgs : EventArgs
 	{
+		public string textToDisplay;
 	}
 }

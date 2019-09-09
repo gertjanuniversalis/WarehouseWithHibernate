@@ -20,7 +20,6 @@ namespace Warehouse.ControllerTests
 		public void CanCreatePayout(decimal value)
 		{
 			CashSet standardSet = Mocks.MockCashSets.StandardSet;
-			decimal returnvalue = standardSet.GetSum() - value;
 
 			CashSet payout = (CashSet)Controllers.PaymentController.Payout(value, standardSet);
 

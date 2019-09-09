@@ -3,32 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Warehouse.Interfaces;
+using Warehouse.CustomArgs;
 
 namespace Warehouse.Controllers
 {
-	public class ConsoleController : IConsole
+	public class ConsoleController
 	{
-		/// <summary>
-		/// Prints the parameter to the console
-		/// </summary>
-		/// <param name="textToPrint">The text to print</param>
-		public void Print(string textToPrint)
+		public void PrintNewItem(object source, CartContentChangedEventArgs e)
 		{
-			Console.WriteLine(textToPrint);
-		}
-
-		public string GetStringInput(string textToShow)
-		{
-			Print(textToShow);
-			return Console.ReadLine();
-		}
-
-		public ConsoleKey GetSingleKey(string textToShow, bool hideInput = false)
-		{
-			Print(textToShow);
-			return Console.ReadKey(hideInput).Key;
+			Console.WriteLine(string.Format("\n{0}\n{1}\n{2}\n{3}",
+				"=============Customer=================",
+				e.NewSumTotal,
+				e.Product.Description,
+				"==================================="));
 		}
 	}
 }

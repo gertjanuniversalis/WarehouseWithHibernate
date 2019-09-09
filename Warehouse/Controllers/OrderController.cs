@@ -5,55 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NHibernate;
-using NHibernate.Linq;
 
-using Warehouse.Interfaces;
+using Warehouse.CustomArgs;
 using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-	/// <summary>
-	/// Provides methods to manipulate orders and the Orders/OrderedProducts Database tables
-	/// </summary>
-	public static class OrderController
+	public class OrderController
 	{
-		internal static Success SaveOrder(int userID, IShoppingCart cart)
+		internal void DisplayOrder(object sender, OrderEventArgs oe)
 		{
-			IOrderTransaction order = new OrderTransaction();
-
-			try
+			if(int.TryParse(oe.OrderIdStr, out int orderID))
 			{
-				order.StartTransaction(userID);
-
-				foreach (KeyValuePair<IProduct, int> product in cart.CartItems)
+				Order oldOrder;
+				using (ISession session = Sessions.NHibernateSession.OpenSession())
 				{
-					order.AddToOrder(product.Key, product.Value);
+					oldOrder = session.Query<Order>().Where(order => order.OrderID == orderID).FirstOrDefault();
 				}
 
-				order.Commit();
-
-				return new Success(true, "Order saved successfully");
-			}
-			catch
-			{
-				order.Revert();
-
-				return new Success(false, "Order failed, try again");
-			}
-		}
-
-		/// <summary>
-		/// Gets an existing order from the DB
-		/// </summary>
-		/// <param name="orderID">The order to return</param>
-		internal static IOrder GetOrder(int orderID)
-		{
-			using (ISession session = Sessions.NHibernateSession.OpenSession())
-			{
-				var order = session.Query<Order>().Where(o => o.OrderID == orderID).Fetch(o => o.OrderedProducts).ToFuture();
-				session.Query<OrderedProduct>().Where(op => op.Order.OrderID == orderID).Fetch(op => op.Product).ToFuture();
-
-				return order.FirstOrDefault();
+				if(oldOrder != null)
+				{
+					Console.WriteLine(oldOrder.ToString());
+				}
+				else
+				{
+					Console.WriteLine("No data found for order number {orderID}");
+				}
 			}
 		}
 	}

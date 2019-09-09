@@ -4,84 +4,109 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Warehouse.Controllers;
+using Warehouse.CustomArgs;
 using Warehouse.Interfaces;
 
 namespace Warehouse.Models
 {
-	public class ShoppingCart : IShoppingCart
+	public class ShoppingCart
 	{
-		public Dictionary<IProduct, int> CartItems { get; private set; }
+		public event EventHandler<CartContentChangedEventArgs> CartContentChanged;
+		public event EventHandler<ProvideChangeEventArgs> ChangeRequested;
+		public event EventHandler<CartPayedForEventArgs> PaymentCompleted;
 
-		public ShoppingCart()
+		private readonly ProductController productController;
+		private readonly PaymentController paymentController;
+
+		public Dictionary<IProduct, int> CartContents { get; private set; }
+
+
+
+		public ShoppingCart(ProductController prodCon, PaymentController payCon)
 		{
-			CartItems = new Dictionary<IProduct, int>();
+			productController = prodCon;
+			paymentController = payCon;
+
+			CartContents = new Dictionary<IProduct, int>();
+		}
+		public ShoppingCart(ProductController prodCon, Dictionary<IProduct, int> initialContent)
+		{
+			productController = prodCon;
+			CartContents = initialContent;
+		}
+		public ShoppingCart(ShoppingCart copyCart)
+		{
+			this.productController = copyCart.productController;
+			this.CartContents = copyCart.CartContents;
 		}
 
-		public ShoppingCart(List<OrderedProduct> initialContent)
+		public void EditCart(object s, BarcodeScannedEventArgs bse)
 		{
-			CartItems = new Dictionary<IProduct, int>();
+			string[] codeStr = bse.BarcodeStr.Split(' ');
 
-			foreach (OrderedProduct product in initialContent)
+			if(int.TryParse(codeStr[0], out int itemCode))
 			{
-				CartItems.Add(product.Product, product.Quantity);
-			}
-		}
-
-		public Success AddItem(int barCode, int amount = 1)
-		{
-			IProduct product = Controllers.ProductController.GetItemByCode(barCode);
-
-			if(product != null)
-			{
-				foreach(KeyValuePair<IProduct, int> cartProd in CartItems)
+				if(bse.AddToCart)
 				{
-					if (cartProd.Key.BarCode == barCode)
-					{
-						CartItems[cartProd.Key] += amount;
-
-						return new Success(true, product.Description);
-					}
-				}
-
-				CartItems.Add(product, amount);
-
-				return new Success(true, string.Format("{0}{1}",
-					product.Description, 
-					amount != 1 ? ", ("+amount.ToString()+")" : ""));
-			}
-			else
-			{
-				return new Success(false, "\nNo product found for this barcode");
-			}
-		}
-
-		public Success RemoveItem(int barCode, int amount = 1)
-		{
-			IProduct product = Controllers.ProductController.GetItemByCode(barCode);
-
-			if (product != null)
-			{
-				if (CartItems.TryGetValue(product, out int amountInCart))
-				{
-					if(amountInCart <= amount)
-					{
-						CartItems.Remove(product);
-					}
-					else
-					{
-						CartItems[product] -= amount;
-					}
-
-					return new Success(true);
+					AddToCart(itemCode, GetAmount(codeStr));
 				}
 				else
 				{
-					return new Success(true, "\nNo such item in the cart");
+					RemoveFromCart(itemCode, GetAmount(codeStr));
 				}
 			}
 			else
 			{
-				return new Success(false, "\nInvalid barcode");
+				//TODO: print "incorrect code format"
+			}
+		}
+
+		internal void StartPayment(object s, PaymentEventArgs pe)
+		{
+			if(decimal.TryParse(pe.CashGivenStr, out decimal cashGiven))
+			{
+				decimal cartVal = GetTransactionValue();
+				if(cashGiven == cartVal)
+				{
+					RaiseCartPayedFor();
+				}
+				else if (cashGiven > cartVal)
+				{
+					
+				}
+				else
+				{
+					Console.WriteLine("Not enough money handed over");
+				}
+			}
+			else
+			{
+				Console.WriteLine("Invalid cash format");
+			}
+		}
+
+		internal void DisplayCartContent(object source, EventArgs e)
+		{
+			if (CartContents.Count >= 1)
+			{
+				StringBuilder builder = new StringBuilder("\nCart contains:");
+
+				foreach (KeyValuePair<IProduct, int> orderedItem in CartContents)
+				{
+					builder.Append(string.Format("\n\t{0} times {1}",
+						orderedItem.Value,
+						orderedItem.Key.Description));
+				}
+
+				builder.Append(string.Format("\n\nFor a value of:{0}\n\n", GetTransactionValue().ToString()));
+
+				//TODO: print cartontent
+				Console.WriteLine(builder.ToString());
+			}
+			else
+			{
+				Console.WriteLine("Cart is empty");
 			}
 		}
 
@@ -89,7 +114,7 @@ namespace Warehouse.Models
 		{
 			decimal value = 0m;
 
-			foreach(KeyValuePair<IProduct, int> itemCount in CartItems)
+			foreach (KeyValuePair<IProduct, int> itemCount in CartContents)
 			{
 				value += itemCount.Key.UnitPrice * itemCount.Value;
 			}
@@ -97,25 +122,90 @@ namespace Warehouse.Models
 			return value;
 		}
 
-		public override string ToString()
+
+		private int GetAmount(string[] codeStr)
 		{
-			if(CartItems.Count != 0)
+			if (codeStr.Length > 1)
 			{
-				StringBuilder contents = new StringBuilder("\nCart currently contains:");
-
-				foreach (KeyValuePair<IProduct, int> itemCount in CartItems)
+				if(int.TryParse(codeStr[1], out int amount))
 				{
-					contents.Append(string.Format("\n{0} times {1}", itemCount.Value.ToString(), itemCount.Key.Description));
+					return amount;
 				}
-
-				contents.Append(string.Format("\n\nFor a total value of: {0}\n\n", GetTransactionValue().ToString()));
-			
-				return contents.ToString();
+				else
+				{
+					return 1;
+				}
 			}
 			else
 			{
-				return "\nCart is empty";
+				return 1;
 			}
+		}
+
+		private void AddToCart(int barcode, int amount)
+		{
+			IProduct product = productController.GetItemByCode(barcode);
+
+			if (product != null)
+			{
+				foreach(KeyValuePair<IProduct, int> orderedProduct in CartContents)
+				{
+					if(orderedProduct.Key.BarCode == barcode)
+					{
+						CartContents[orderedProduct.Key] += amount;
+						RaiseCartContentChanged(product, amount, true);
+						return;
+					}
+				}
+				CartContents.Add(product, amount);
+				RaiseCartContentChanged(product, amount, true);
+				return;
+			}
+			else
+			{
+				//TODO: Print "unknown item"
+			}
+		}
+
+		private void RemoveFromCart(int barcode, int amount)
+		{
+			IProduct product = productController.GetItemByCode(barcode);
+
+			if(product != null)
+			{
+				foreach(KeyValuePair<IProduct, int> prodInCart in CartContents)
+				{
+					if(prodInCart.Key.BarCode == barcode)
+					{
+						if(prodInCart.Value <= amount)
+						{
+							CartContents.Remove(prodInCart.Key);
+						}
+						else
+						{
+							CartContents[prodInCart.Key] -= amount;
+						}
+						return;
+					}
+				}
+				Console.WriteLine("unknown item");
+			}
+			else
+			{
+				Console.WriteLine("unknown item");
+			}
+		}
+
+		
+
+		private void RaiseCartContentChanged(IProduct product, int amount, bool added)
+		{
+			CartContentChanged?.Invoke(this, new CartContentChangedEventArgs(product, amount, added, GetTransactionValue()));
+		}
+
+		private void RaiseCartPayedFor()
+		{
+			PaymentCompleted?.Invoke(this, new CartPayedForEventArgs(CartContents));
 		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Warehouse.Controllers
+namespace Warehouse.Obsolete.Controllers
 {
 	/// <summary>
 	/// Provides general NHibernate control methods

@@ -86,10 +86,29 @@
     <Compile Include="Controllers\CashController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\DrawerController.cs" />
-    <Compile Include="Controllers\NHibernateController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="CustomArgs\BarcodeScannedEventArgs.cs" />
+    <Compile Include="CustomArgs\CartContentChangedEventArgs.cs" />
+    <Compile Include="CustomArgs\CartPayedForEventArgs.cs" />
+    <Compile Include="CustomArgs\CashHandedOverEventArgs.cs" />
+    <Compile Include="CustomArgs\ConsolePrintEventArgs.cs" />
+    <Compile Include="CustomArgs\OrderEventArgs.cs" />
+    <Compile Include="CustomArgs\PaymentEventArgs.cs" />
+    <Compile Include="CustomArgs\ProvideChangeEventArgs.cs" />
+    <Compile Include="EventHandlers\InputHandler.cs" />
+    <Compile Include="IO\EmployeeConsole.cs" />
+    <Compile Include="Models\CashItem.cs" />
+    <Compile Include="Models\CashSet.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderedProduct.cs" />
+    <Compile Include="Models\OrderTransaction.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
+    <Compile Include="Models\TillDrawer.cs" />
+    <Compile Include="CustomArgs\PrintToStorageEventArgs.cs" />
+    <Compile Include="CustomArgs\ProductAddedEventArgs.cs" />
     <Compile Include="Exceptions\CartModifyException.cs" />
     <Compile Include="Exceptions\InvalidCashStructureException.cs" />
     <Compile Include="Exceptions\NHibernateSessionException.cs" />
@@ -102,16 +121,6 @@
     <Compile Include="Interfaces\IProduct.cs" />
     <Compile Include="Interfaces\IShoppingCart.cs" />
     <Compile Include="Interfaces\ITillDrawer.cs" />
-    <Compile Include="IO\ManagementScreen.cs" />
-    <Compile Include="Models\CashItem.cs" />
-    <Compile Include="Models\CashSet.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderedProduct.cs" />
-    <Compile Include="Models\OrderTransaction.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ShoppingCart.cs" />
-    <Compile Include="Models\Success.cs" />
-    <Compile Include="Models\TillDrawer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sessions\NHibernateSession.cs" />
@@ -120,10 +129,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="EventArgs\" />
-    <Folder Include="EventHandlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Database\WarehouseDB.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
