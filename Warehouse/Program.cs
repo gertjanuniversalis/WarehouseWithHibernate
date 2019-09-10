@@ -13,14 +13,14 @@ namespace Warehouse
 	class Program
 	{
 		private static bool runProcess = true;
-		private static ProductController productController;
+		private static ProductController ProductController;
 		private static ConsoleController ConsoleController;
 
 #pragma warning disable IDE0060 // Remove unused parameter
 		static void Main(string[] args)
 #pragma warning restore IDE0060 // Remove unused parameter
 		{
-			productController = new ProductController();
+			ProductController = new ProductController();
 			ConsoleController = new ConsoleController();
 
 			//Start the employee screen
@@ -31,7 +31,7 @@ namespace Warehouse
 			var tillDrawer = new TillDrawer(DefaultCashSet());
 			var inputHandler = new EventHandlers.InputHandler();
 			var paymentcontroller = new PaymentController(tillDrawer);		
-			var cart = new ShoppingCart(productController, paymentcontroller);
+			var cart = new ShoppingCart(ProductController, paymentcontroller);
 			var orderControler = new OrderController();
 
 			//Subscribe to events
@@ -46,10 +46,16 @@ namespace Warehouse
 				inputHandler.InstructionsRequested += employeeScreen.PrintInstructions;
 				inputHandler.TillContentRequested += paymentcontroller.TillDrawer.PrintContents;
 				inputHandler.OrderRequested += orderControler.DisplayOrder;
-				inputHandler.CatalogueRequested += productController.PrintCatalogue;
+				inputHandler.CatalogueRequested += ProductController.PrintCatalogue;
 
 				//Listeners to ShoppingCart
 				cart.CartContentChanged += ConsoleController.PrintNewItem;
+				cart.ChangeRequested += paymentcontroller.DetermineChange;
+				cart.PaymentCompleted += cart.ResetContent;
+
+				//Listeners to paymentcontroller
+				paymentcontroller.ChangeFound += ConsoleController.Print;
+				paymentcontroller.PaymentPossible += cart.FinalizeTransaction;
 
 			//Start the process
 			employeeScreen.PrintInstructions();

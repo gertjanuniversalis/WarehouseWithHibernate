@@ -17,5 +17,10 @@ namespace Warehouse.Controllers
 				e.Product.Description,
 				"==================================="));
 		}
+
+		public void Print(object source, ConsolePrintEventArgs cpe)
+		{
+			Console.WriteLine(cpe.TextToDisplay);
+		}
 	}
 }

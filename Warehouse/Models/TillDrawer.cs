@@ -11,7 +11,7 @@ namespace Warehouse.Models
 {
 	public class TillDrawer
 	{
-		private ICashSet Contents;
+		public ICashSet Contents { get; private set; }
 
 		public TillDrawer()
 		{

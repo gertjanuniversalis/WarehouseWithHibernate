@@ -14,10 +14,10 @@ namespace Warehouse.ModelTests
 		[Test]
 		public void CanCreateEmptyCart()
 		{
-			ShoppingCart cart = new ShoppingCart(new Controllers.ProductController());
+			ShoppingCart cart = new ShoppingCart(new Controllers.ProductController(), new Controllers.PaymentController(new TillDrawer()));
 
 			Assert.IsNotNull(cart);
-			Assert.IsEmpty(cart.CartItems);
+			Assert.IsEmpty(cart.CartContents);
 		}
 	}
 }

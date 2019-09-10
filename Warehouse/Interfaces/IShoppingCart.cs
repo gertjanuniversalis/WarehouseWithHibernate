@@ -39,6 +39,6 @@ namespace Warehouse.Interfaces
 		/// <summary>
 		/// Gets the contents of the current transaction
 		/// </summary>
-		string ToString();
+		string AsString();
 	}
 }

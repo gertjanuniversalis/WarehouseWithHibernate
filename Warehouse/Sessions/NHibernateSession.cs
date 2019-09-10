@@ -32,7 +32,9 @@ namespace Warehouse.Sessions
 			}
 			catch (Exception e)
 			{
-				throw new NHibernateSessionException(e.InnerException.ToString());
+				string message = e.InnerException?.ToString();
+
+				throw new NHibernateSessionException(message ?? e.ToString());
 			}
 		}
 	}

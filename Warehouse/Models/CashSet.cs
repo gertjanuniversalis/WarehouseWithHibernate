@@ -75,6 +75,23 @@ namespace Warehouse.Models
 			}
 		}
 
+		public void Remove(ICash denomination, int amount)
+		{
+			bool exists = CashStack.TryGetValue(denomination, out int value);
+
+			if (exists)
+			{
+				CashStack[denomination] = value - amount;
+			}
+		}
+
+		public void Remove(ICashSet set)
+		{
+			foreach (KeyValuePair<ICash, int> denomination in set.CashStack)
+			{
+				Remove(denomination.Key, denomination.Value);
+			}
+		}
 		/// <summary>
 		/// Sums the cash available in the drawer
 		/// </summary>
@@ -90,7 +107,7 @@ namespace Warehouse.Models
 			return sum;
 		}
 
-		public override string ToString()
+		public string AsString()
 		{
 			StringBuilder content = new StringBuilder("");
 

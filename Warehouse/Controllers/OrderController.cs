@@ -25,11 +25,11 @@ namespace Warehouse.Controllers
 
 				if(oldOrder != null)
 				{
-					Console.WriteLine(oldOrder.ToString());
+					Console.WriteLine(oldOrder.AsString());
 				}
 				else
 				{
-					Console.WriteLine("No data found for order number {orderID}");
+					Console.WriteLine(string.Format("No data found for order number {0}", oe.OrderIdStr));
 				}
 			}
 		}

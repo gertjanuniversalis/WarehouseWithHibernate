@@ -60,7 +60,6 @@
     <Compile Include="ModelTests\OrderTests.cs" />
     <Compile Include="ModelTests\ProductTests.cs" />
     <Compile Include="ModelTests\ShoppingCartTests.cs" />
-    <Compile Include="ModelTests\SuccessTests.cs" />
     <Compile Include="ModelTests\TillDrawerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionTests\NHibernateSessionTests.cs" />

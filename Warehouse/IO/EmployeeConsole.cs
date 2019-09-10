@@ -18,7 +18,7 @@ namespace Warehouse.IO
 
 		internal void GetInput()
 		{
-			InputRequested?.Invoke(this, new ConsolePrintEventArgs { textToDisplay = "input code" });
+			InputRequested?.Invoke(this, new ConsolePrintEventArgs("input code"));
 		}
 
 		public void PrintInstructions()
@@ -37,9 +37,9 @@ namespace Warehouse.IO
 		{
 			return
 				"XXX\t -> Add 1 item with code XXX to the transaction\n" +
-				"XXX Y\t -> Adds Y of item with code XXX to the transaction" +
+				"XXX Y\t -> Adds Y of item with code XXX to the transaction\n" +
 				"AXXX\t -> Add 1 item with code XXX to the transaction\n" +
-				"AXXX Y\t -> Adds Y of item with code XXX to the transaction" +
+				"AXXX Y\t -> Adds Y of item with code XXX to the transaction\n" +
 				"RXXX\t -> Remove 1 item with code XXX from the transaction\n" +
 				"RXXX Y\t -> Remove Y items with code XXX from the transaction\n" +
 				"-----------------\n" +

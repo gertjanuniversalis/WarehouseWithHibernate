@@ -8,5 +8,13 @@ namespace Warehouse.CustomArgs
 {
 	public class ProvideChangeEventArgs
 	{
+		public decimal CashGiven { get; }
+		public decimal TransactionValue { get; }
+
+		public ProvideChangeEventArgs(decimal cashGiven, decimal transVal)
+		{
+			this.CashGiven = cashGiven;
+			this.TransactionValue = transVal;
+		}
 	}
 }

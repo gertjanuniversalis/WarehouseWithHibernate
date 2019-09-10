@@ -19,9 +19,10 @@ namespace Warehouse.ControllerTests
 		[TestCase(0.5)]
 		public void CanCreatePayout(decimal value)
 		{
+			var payCont = new Controllers.PaymentController(new TillDrawer());
 			CashSet standardSet = Mocks.MockCashSets.StandardSet;
 
-			CashSet payout = (CashSet)Controllers.PaymentController.Payout(value, standardSet);
+			CashSet payout = (CashSet)payCont.Payout(value, standardSet);
 
 			Assert.IsNotNull(payout);
 			Assert.AreEqual(value, payout.GetSum());

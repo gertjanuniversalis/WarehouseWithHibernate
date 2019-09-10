@@ -13,6 +13,8 @@ namespace Warehouse.Interfaces
 		decimal GetSum();
 		void Add(ICash denomination, int amount = 0);
 		void Add(ICashSet cashSet);
+		void Remove(ICash denomination, int amount = 0);
+		void Remove(ICashSet cashSet);
 		void Edit(ICash denomination, int amount = 0);
 	}
 }

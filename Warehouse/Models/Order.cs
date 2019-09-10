@@ -20,7 +20,7 @@ namespace Warehouse.Models
 
 
 
-		public override string ToString()
+		public virtual string AsString()
 		{
 			StringBuilder builder = new StringBuilder(string.Format("Order number {0} contains:", OrderID.ToString()));
 			decimal value = 0m;

@@ -58,7 +58,7 @@ namespace Warehouse.Models
 			}
 			else
 			{
-				//TODO: print "incorrect code format"
+				Console.WriteLine("Inproper barcode format; please try again");
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace Warehouse.Models
 				}
 				else if (cashGiven > cartVal)
 				{
-					
+					RaiseProvideChange(cashGiven, cartVal);
 				}
 				else
 				{
@@ -84,6 +84,17 @@ namespace Warehouse.Models
 			{
 				Console.WriteLine("Invalid cash format");
 			}
+		}
+
+		internal void ResetContent(object sender, CartPayedForEventArgs e)
+		{
+			CartContents = new Dictionary<IProduct, int>();
+		}
+
+		internal void FinalizeTransaction(object sender, PaymentCompletedEventArgs pce)
+		{
+			paymentController.TillDrawer.Contents.Add(pce.GivenCash);
+			paymentController.TillDrawer.Contents.Remove(pce.PayoutSet);			
 		}
 
 		internal void DisplayCartContent(object source, EventArgs e)
@@ -101,7 +112,6 @@ namespace Warehouse.Models
 
 				builder.Append(string.Format("\n\nFor a value of:{0}\n\n", GetTransactionValue().ToString()));
 
-				//TODO: print cartontent
 				Console.WriteLine(builder.ToString());
 			}
 			else
@@ -163,7 +173,7 @@ namespace Warehouse.Models
 			}
 			else
 			{
-				//TODO: Print "unknown item"
+				Console.WriteLine(string.Format("No item with barcode {0} found", barcode.ToString()));
 			}
 		}
 
@@ -206,6 +216,13 @@ namespace Warehouse.Models
 		private void RaiseCartPayedFor()
 		{
 			PaymentCompleted?.Invoke(this, new CartPayedForEventArgs(CartContents));
+			Console.WriteLine("Transaction completed");
+		}
+
+		private void RaiseProvideChange(decimal cashGiven, decimal cartVal)
+		{
+			ChangeRequested?.Invoke(this, new ProvideChangeEventArgs(cashGiven, cartVal));
+			RaiseCartPayedFor();
 		}
 	}
 }

@@ -8,6 +8,11 @@ namespace Warehouse.CustomArgs
 {
 	public class ConsolePrintEventArgs : EventArgs
 	{
-		public string textToDisplay;
+		public string TextToDisplay { get; }
+
+		public ConsolePrintEventArgs(string text)
+		{
+			TextToDisplay = text;
+		}
 	}
 }

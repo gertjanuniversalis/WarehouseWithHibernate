@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Warehouse.CustomArgs;
 using Warehouse.Interfaces;
 using Warehouse.Models;
@@ -11,6 +12,8 @@ namespace Warehouse.Controllers
 {
 	public class PaymentController
 	{
+		public event EventHandler<ConsolePrintEventArgs> ChangeFound;
+		public event EventHandler<PaymentCompletedEventArgs> PaymentPossible;
 		public TillDrawer TillDrawer { get; }
 
 		public PaymentController(TillDrawer tillDrawer)
@@ -42,9 +45,87 @@ namespace Warehouse.Controllers
 			}
 		}
 
-		public void DetermineChange(object s, PaymentEventArgs pe)
+		public void DetermineChange(object s, ProvideChangeEventArgs pce)
 		{
+			CashSet transactionSet = new CashSet(TillDrawer.Contents);
+			CashSet givenSet = (CashSet)CashController.SmallestSetForValue(pce.CashGiven);
+			transactionSet.Add(givenSet);
 
+			decimal valueToPayout = pce.CashGiven - pce.TransactionValue;
+
+			CashSet setToReturn = MakeChangeSet(valueToPayout, transactionSet);
+
+			if (setToReturn != null)
+			{
+				RaisePrintReturnCash(setToReturn);
+				RaisePaymentPossible(givenSet, setToReturn);
+			}
+			else
+			{
+				RaiseNoChangeFound();
+			}
+		}
+		
+		private CashSet MakeChangeSet(decimal valueToPayout, CashSet transactionSet)
+		{
+			decimal remainder = valueToPayout;
+			CashSet changeSet = new CashSet();
+
+			foreach(var cashType in transactionSet.CashStack)
+			{
+				int amountNeeded = (int)(remainder / cashType.Key.UnitValue);
+
+				if(amountNeeded == 0 || cashType.Value == 0)
+				{
+					//we either don't need this type of cash, or we don't have any
+					continue;
+				}
+				else if (cashType.Value >= amountNeeded)
+				{
+					changeSet.Add(cashType.Key, amountNeeded);
+					remainder -= cashType.Key.UnitValue * amountNeeded;
+				}
+				else
+				{
+					changeSet.Add(cashType.Key, cashType.Value);
+					remainder -= cashType.Key.UnitValue * cashType.Value;
+				}
+
+				if(remainder == 0)
+				{
+					return changeSet;
+				}
+			}
+
+			if (remainder <= 0.05m)
+			{
+				decimal roundedSet = (Math.Round(10 * remainder, 2, MidpointRounding.AwayFromZero)) / 10;
+				return MakeChangeSet(roundedSet, transactionSet);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		private void RaisePrintReturnCash(CashSet setToReturn)
+		{
+			string changeNotification = string.Format("Return {0}, distributed as {1}",
+				setToReturn.GetSum().ToString(),
+				setToReturn.AsString());
+
+			ChangeFound?.Invoke(this, new ConsolePrintEventArgs(changeNotification));
+
+		}
+		private void RaiseNoChangeFound()
+		{
+			ChangeFound?.Invoke(this, new ConsolePrintEventArgs("Unable to attribute change"));
+		}
+
+		private void RaisePaymentPossible(CashSet cashGiven, CashSet setToReturn)
+		{
+			PaymentPossible?.Invoke(this, new PaymentCompletedEventArgs(cashGiven, setToReturn));
 		}
 	}
 }

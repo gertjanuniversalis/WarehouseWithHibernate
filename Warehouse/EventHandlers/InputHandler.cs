@@ -22,7 +22,7 @@ namespace Warehouse.EventHandlers
 
 		public void GetAndHandleInput(object s, ConsolePrintEventArgs cpe)
 		{
-			Console.WriteLine(cpe.textToDisplay);
+			Console.WriteLine(cpe.TextToDisplay);
 
 			string input = Console.ReadLine();
 

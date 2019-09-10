@@ -95,6 +95,7 @@
     <Compile Include="CustomArgs\CashHandedOverEventArgs.cs" />
     <Compile Include="CustomArgs\ConsolePrintEventArgs.cs" />
     <Compile Include="CustomArgs\OrderEventArgs.cs" />
+    <Compile Include="CustomArgs\PaymentCompletedEventArgs.cs" />
     <Compile Include="CustomArgs\PaymentEventArgs.cs" />
     <Compile Include="CustomArgs\ProvideChangeEventArgs.cs" />
     <Compile Include="EventHandlers\InputHandler.cs" />
