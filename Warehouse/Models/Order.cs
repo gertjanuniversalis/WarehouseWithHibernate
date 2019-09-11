@@ -21,18 +21,10 @@ namespace Warehouse.Models
 
 		public virtual string AsString()
 		{
-			StringBuilder builder = new StringBuilder(string.Format("Order number {0} contains:", OrderID.ToString()));
-			decimal value = 0m;
-			foreach(OrderedProduct product in OrderedProducts)
-			{
-				builder.Append(string.Format("\n\t{0} times {1}",
-					product.Quantity.ToString(),
-					product.Product.Description));
+			StringBuilder builder = new StringBuilder(string.Format("Order number {0} contains:\n", OrderID.ToString()));
 
-				value += product.Quantity * product.Product.UnitPrice;
-			}
-
-			builder.Append(string.Format("\nFor a total value of {0}", value.ToString()));
+			builder.Append(string.Join("\n\t", OrderedProducts.Select(p => p.Quantity + " times " + p.Product.Description)));
+			builder.Append(string.Format("\nFor a total value of {0}", OrderedProducts.Sum(p => p.Product.UnitPrice * p.Quantity).ToString()));
 			builder.Append(string.Format("\nOrder finalised at {0}", OrderDate.ToString()));
 
 			return builder.ToString();

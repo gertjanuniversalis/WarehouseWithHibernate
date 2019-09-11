@@ -28,13 +28,13 @@ namespace Warehouse.EventHandlers
 
 			if (input.Length == 0) return;
 
-			switch (input.ToUpper().Substring(0,1))
+			switch (input.ToUpper().Trim().Substring(0,1))
 			{
 				case "A":
-					RaiseAddProduct(input.Substring(1));
+					RaiseAddProduct(input.Substring(1).Trim());
 					break;
 				case "B":
-					RaiseStartPayment(input.Substring(1));
+					RaiseStartPayment(input.Substring(1).Trim());
 					break;
 				case "C":
 					RaiseShowTillDrawer();
@@ -43,7 +43,7 @@ namespace Warehouse.EventHandlers
 					RaiseInstructionsRequested();
 					break;
 				case "O":
-					RaiseShowOldOrder(input.Substring(1));
+					RaiseShowOldOrder(input.Substring(1).Trim());
 					break;
 				case "P":
 					RaiseShowCatalogue();
@@ -52,13 +52,13 @@ namespace Warehouse.EventHandlers
 					RaiseCloseProgram();
 					break;
 				case "R":
-					RaiseRemoveProduct(input.Substring(1));
+					RaiseRemoveProduct(input.Substring(1).Trim());
 					break;
 				case "T":
 					RaiseShowCartContent();
 					break;
 				default:
-					RaiseAddProduct(input);
+					RaiseAddProduct(input.Trim());
 					break;
 			}
 		}
