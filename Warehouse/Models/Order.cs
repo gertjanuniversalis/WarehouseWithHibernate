@@ -19,7 +19,6 @@ namespace Warehouse.Models
 		public virtual ISet<OrderedProduct> OrderedProducts { get; set; } = new HashSet<OrderedProduct>();
 
 
-
 		public virtual string AsString()
 		{
 			StringBuilder builder = new StringBuilder(string.Format("Order number {0} contains:", OrderID.ToString()));

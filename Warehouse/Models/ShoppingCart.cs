@@ -30,15 +30,19 @@ namespace Warehouse.Models
 
 			CartContents = new Dictionary<IProduct, int>();
 		}
-		public ShoppingCart(ProductController prodCon, Dictionary<IProduct, int> initialContent)
+		public ShoppingCart(ProductController prodCon, PaymentController payCon, Dictionary<IProduct, int> initialContent)
 		{
 			productController = prodCon;
+			paymentController = payCon;
+
 			CartContents = initialContent;
 		}
-		public ShoppingCart(ShoppingCart copyCart)
+		public ShoppingCart(ShoppingCart cartToCopy)
 		{
-			this.productController = copyCart.productController;
-			this.CartContents = copyCart.CartContents;
+			this.productController = cartToCopy.productController;
+			this.paymentController = cartToCopy.paymentController;
+
+			this.CartContents = cartToCopy.CartContents;
 		}
 
 		public void EditCart(object s, BarcodeScannedEventArgs bse)
@@ -99,20 +103,12 @@ namespace Warehouse.Models
 
 		internal void DisplayCartContent(object source, EventArgs e)
 		{
-			if (CartContents.Count >= 1)
+			if (CartContents.Count > 0)
 			{
-				StringBuilder builder = new StringBuilder("\nCart contains:");
+				Console.WriteLine("\nCart contains:\n" +
+					string.Join("\n\t", CartContents.Select(p => p.Value + " times " + p.Key.Description)) +
+					"\n\nFor a value of: " + GetTransactionValue().ToString());
 
-				foreach (KeyValuePair<IProduct, int> orderedItem in CartContents)
-				{
-					builder.Append(string.Format("\n\t{0} times {1}",
-						orderedItem.Value,
-						orderedItem.Key.Description));
-				}
-
-				builder.Append(string.Format("\n\nFor a value of:{0}\n\n", GetTransactionValue().ToString()));
-
-				Console.WriteLine(builder.ToString());
 			}
 			else
 			{
@@ -122,16 +118,8 @@ namespace Warehouse.Models
 
 		public decimal GetTransactionValue()
 		{
-			decimal value = 0m;
-
-			foreach (KeyValuePair<IProduct, int> itemCount in CartContents)
-			{
-				value += itemCount.Key.UnitPrice * itemCount.Value;
-			}
-
-			return value;
+			return CartContents.Sum(p => p.Key.UnitPrice * p.Value);
 		}
-
 
 		private int GetAmount(string[] codeStr)
 		{
@@ -141,68 +129,53 @@ namespace Warehouse.Models
 				{
 					return amount;
 				}
-				else
-				{
-					return 1;
-				}
 			}
-			else
-			{
-				return 1;
-			}
+			return 1;
 		}
 
 		private void AddToCart(int barcode, int amount)
 		{
-			IProduct product = productController.GetItemByCode(barcode);
+			var enteredProd = CartContents.SingleOrDefault(p => p.Key.BarCode == barcode);
 
-			if (product != null)
+			if (enteredProd.Equals(default(KeyValuePair<IProduct,int>)))
 			{
-				foreach(KeyValuePair<IProduct, int> orderedProduct in CartContents)
+				IProduct product = productController.GetItemByCode(barcode);
+
+				if (product != null)
 				{
-					if(orderedProduct.Key.BarCode == barcode)
-					{
-						CartContents[orderedProduct.Key] += amount;
-						RaiseCartContentChanged(product, amount, true);
-						return;
-					}
+					CartContents.Add(product, amount);
+					RaiseCartContentChanged(product, amount, true);
 				}
-				CartContents.Add(product, amount);
-				RaiseCartContentChanged(product, amount, true);
-				return;
+				else
+				{
+					Console.WriteLine(string.Format("No item with barcode {0} found", barcode.ToString()));
+				}
 			}
 			else
 			{
-				Console.WriteLine(string.Format("No item with barcode {0} found", barcode.ToString()));
+				CartContents[enteredProd.Key] += amount;
+				RaiseCartContentChanged(enteredProd.Key, amount, true);
 			}
 		}
 
 		private void RemoveFromCart(int barcode, int amount)
 		{
-			IProduct product = productController.GetItemByCode(barcode);
+			var enteredProd = CartContents.SingleOrDefault(p => p.Key.BarCode == barcode);
 
-			if(product != null)
+			if (!enteredProd.Equals(default(KeyValuePair<IProduct, int>)))
 			{
-				foreach(KeyValuePair<IProduct, int> prodInCart in CartContents)
+				if(enteredProd.Value > amount)
 				{
-					if(prodInCart.Key.BarCode == barcode)
-					{
-						if(prodInCart.Value <= amount)
-						{
-							CartContents.Remove(prodInCart.Key);
-						}
-						else
-						{
-							CartContents[prodInCart.Key] -= amount;
-						}
-						return;
-					}
+					CartContents[enteredProd.Key] -= amount;
 				}
-				Console.WriteLine("unknown item");
+				else
+				{
+					CartContents.Remove(enteredProd.Key);
+				}
 			}
 			else
 			{
-				Console.WriteLine("unknown item");
+				Console.WriteLine(string.Format("No product with code {0} found in the cart", barcode));
 			}
 		}
 

@@ -10,6 +10,10 @@ namespace Warehouse.Mocks
 	{
 		public static CashSet EmptySet { get; private set; }
 		public static CashSet InfiniteSet { get; private set; }
+
+		/// <summary>
+		/// value: 34.71
+		/// </summary>
 		public static CashSet StandardSet { get; private set; }
 
 		static MockCashSets()

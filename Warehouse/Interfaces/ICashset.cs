@@ -16,5 +16,7 @@ namespace Warehouse.Interfaces
 		void Remove(ICash denomination, int amount = 0);
 		void Remove(ICashSet cashSet);
 		void Edit(ICash denomination, int amount = 0);
+
+		string AsString();
 	}
 }

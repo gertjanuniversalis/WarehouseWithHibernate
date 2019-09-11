@@ -19,7 +19,6 @@ namespace Warehouse.Models
 		{
 			CashStack = new SortedDictionary<ICash, int>();
 		}
-
 		/// <summary>
 		/// Creates a new cashset with a pre-built dictionary
 		/// </summary>
@@ -28,7 +27,6 @@ namespace Warehouse.Models
 		{
 			CashStack = initialSet ?? new SortedDictionary<ICash, int>();
 		}
-
 		/// <summary>
 		/// Creates a copy of an existing ICashSet
 		/// </summary>
@@ -37,6 +35,7 @@ namespace Warehouse.Models
 		{
 			this.CashStack = initialSet.CashStack;
 		}
+
 		/// <summary>
 		/// Adds a new denomination of money to this drawer
 		/// </summary>
@@ -97,26 +96,12 @@ namespace Warehouse.Models
 		/// </summary>
 		public decimal GetSum()
 		{
-			decimal sum = 0;
-
-			foreach (KeyValuePair<ICash, int> pair in CashStack)
-			{
-				sum += pair.Key.UnitValue * pair.Value;
-			}
-
-			return sum;
+			return CashStack.Sum(p => p.Key.UnitValue * p.Value);
 		}
 
 		public string AsString()
 		{
-			StringBuilder content = new StringBuilder("");
-
-			foreach (KeyValuePair<ICash, int> pair in CashStack)
-			{
-				content.Append(string.Format("\n{0} times {1}", pair.Value.ToString(), pair.Key.ValueName));
-			}
-
-			return content.ToString();
+			return string.Join("\n", CashStack.Select(p => p.Value + " times" + p.Key.ValueName));
 		}
 	}
 }

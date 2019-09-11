@@ -24,9 +24,9 @@ namespace Warehouse.Models
 
 		public void PrintContents(object s, EventArgs e)
 		{
-			Console.WriteLine(string.Format("Tilldrawer contains: {0}\n formatted as:{1}",
+			Console.WriteLine(string.Format("Tilldrawer contains: {0}\n formatted as:\n{1}",
 				Contents.GetSum().ToString(),
-				Contents.ToString()));
+				Contents.AsString()));
 		}
 	}
 }
