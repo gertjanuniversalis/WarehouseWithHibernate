@@ -108,7 +108,6 @@ namespace Warehouse.Models
 				Console.WriteLine("\nCart contains:\n" +
 					string.Join("\n\t", CartContents.Select(p => p.Value + " times " + p.Key.Description)) +
 					"\n\nFor a value of: " + GetTransactionValue().ToString());
-
 			}
 			else
 			{

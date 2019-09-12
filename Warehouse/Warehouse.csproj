@@ -100,6 +100,7 @@
     <Compile Include="CustomArgs\ProvideChangeEventArgs.cs" />
     <Compile Include="EventHandlers\InputHandler.cs" />
     <Compile Include="IO\EmployeeConsole.cs" />
+    <Compile Include="IO\OrderPrinter.cs" />
     <Compile Include="Models\CashItem.cs" />
     <Compile Include="Models\CashSet.cs" />
     <Compile Include="Models\Order.cs" />
