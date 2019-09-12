@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NHibernate;
+
 using Warehouse.Interfaces;
 
 namespace Warehouse.Models

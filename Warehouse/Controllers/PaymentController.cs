@@ -47,69 +47,27 @@ namespace Warehouse.Controllers
 
 		public void DetermineChange(object s, ProvideChangeEventArgs pce)
 		{
-			CashSet transactionSet = new CashSet(TillDrawer.Contents);
+			ICashSet transactionSet = new CashSet(TillDrawer.Contents);
 			CashSet givenSet = (CashSet)CashController.SmallestSetForValue(pce.CashGiven);
 			transactionSet.Add(givenSet);
 
 			decimal valueToPayout = pce.CashGiven - pce.TransactionValue;
 
-			CashSet setToReturn = MakeChangeSet(valueToPayout, transactionSet);
+			ICashSet setToReturn = Payout(valueToPayout, transactionSet);
 
 			if (setToReturn != null)
 			{
 				RaisePrintReturnCash(setToReturn);
-				RaisePaymentPossible(givenSet, setToReturn);
+				RaisePaymentPossible(givenSet, (CashSet)setToReturn);
 			}
 			else
 			{
 				RaiseNoChangeFound();
 			}
 		}
-		
-		private CashSet MakeChangeSet(decimal valueToPayout, CashSet transactionSet)
-		{
-			decimal remainder = valueToPayout;
-			CashSet changeSet = new CashSet();
-
-			foreach(var cashType in transactionSet.CashStack)
-			{
-				int amountNeeded = (int)(remainder / cashType.Key.UnitValue);
-
-				if(amountNeeded == 0 || cashType.Value == 0)
-				{
-					//we either don't need this type of cash, or we don't have any
-					continue;
-				}
-				else if (cashType.Value >= amountNeeded)
-				{
-					changeSet.Add(cashType.Key, amountNeeded);
-					remainder -= cashType.Key.UnitValue * amountNeeded;
-				}
-				else
-				{
-					changeSet.Add(cashType.Key, cashType.Value);
-					remainder -= cashType.Key.UnitValue * cashType.Value;
-				}
-
-				if(remainder == 0)
-				{
-					return changeSet;
-				}
-			}
-
-			if (remainder <= 0.05m)
-			{
-				decimal roundedSet = (Math.Round(10 * remainder, 2, MidpointRounding.AwayFromZero)) / 10;
-				return MakeChangeSet(roundedSet, transactionSet);
-			}
-			else
-			{
-				return null;
-			}
-		}
 
 
-		private void RaisePrintReturnCash(CashSet setToReturn)
+		private void RaisePrintReturnCash(ICashSet setToReturn)
 		{
 			string changeNotification = string.Format("Return {0}, distributed as {1}",
 				setToReturn.GetSum().ToString(),

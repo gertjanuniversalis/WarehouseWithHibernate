@@ -25,7 +25,7 @@ namespace Warehouse
 
 			//Start the employee screen
 			var employeeScreen = new IO.EmployeeConsole();
-
+			var orderPrinter = new IO.OrderPrinter();
 
 			//Setup till-specific instances
 			var tillDrawer = new TillDrawer(DefaultCashSet());
@@ -51,6 +51,7 @@ namespace Warehouse
 				//Listeners to ShoppingCart
 				cart.CartContentChanged += ConsoleController.PrintNewItem;
 				cart.ChangeRequested += paymentcontroller.DetermineChange;
+				cart.PaymentCompleted += orderPrinter.PrintOrder;
 				cart.PaymentCompleted += cart.ResetContent;
 
 				//Listeners to paymentcontroller

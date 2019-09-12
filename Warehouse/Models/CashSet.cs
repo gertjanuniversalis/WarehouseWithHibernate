@@ -91,6 +91,7 @@ namespace Warehouse.Models
 				Remove(denomination.Key, denomination.Value);
 			}
 		}
+
 		/// <summary>
 		/// Sums the cash available in the drawer
 		/// </summary>
